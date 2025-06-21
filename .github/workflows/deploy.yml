@@ -34,7 +34,7 @@ jobs:
           script: |
             cd /home/ubuntu/festival-expense-tracker/backend
             echo "PORT=3000" > .env
-            echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+            echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             cd ..
             docker-compose down
