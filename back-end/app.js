@@ -27,6 +27,6 @@ app.get("/", (req, res) => {
     res.send("Festival Expense API is running");
 })
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server started on port ${PORT}`);
 })
