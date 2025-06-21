@@ -23,7 +23,7 @@ jobs:
           source: "."
           target: "/home/ubuntu/festival-expense-tracker"
           overwrite: true
-          tar_exludes: |
+          tar_excludes: |
             .git
             node_modules
             back-end/node_modules
