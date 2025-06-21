@@ -23,6 +23,10 @@ jobs:
           source: "."
           target: "/home/ubuntu/festival-expense-tracker"
           overwrite: true
+          tar_exludes: |
+            .git
+            node_modules
+            back-end/node_modules
 
       - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
