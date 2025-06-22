@@ -14,16 +14,19 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Copy project files to EC2
-        uses: appleboy/scp-action@v0.1.5
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "."
-          target: "/home/ubuntu/festival-expense-tracker"
-          overwrite: true
-          scp_ignore: true
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy files using rsync
+        run: |
+          rsync -avz --exclude '.git' --exclude 'node_modules' --exclude 'front-end/node_modules' --exclude 'back-end|node_modules' \
+          -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
+          ./ ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/festival-expense-tracker
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
 
       - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
@@ -32,7 +35,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ubuntu/festival-expense-tracker/backend
+            cd /home/ubuntu/festival-expense-tracker/back-end
             echo "PORT=3000" > .env
             echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
