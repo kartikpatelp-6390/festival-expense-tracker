@@ -1,21 +1,18 @@
-# Stage 1: Build Angular App
-FROM node:16 AS builder
+# Stage 1: Build Angular app
+FROM node:18-alpine as builder
 
 WORKDIR /app
-COPY . .
+
+COPY front-end/package*.json ./
 RUN npm install
 
-RUN npm run build --prod
+COPY front-end/ ./
+RUN npm run build -- --configuration production
 
 # Stage 2: Serve with Nginx
 FROM nginx:1.25-alpine
 
-# Copy built Angular app to nginx html folder
-COPY dist/front-end /usr/share/ngnix/html
-# COPY --from=builder /app/dist/front-end /usr/share/nginx/html
-
-# Copy default nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
+COPY --from=builder /app/dist/front-end /usr/share/nginx/html
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]
