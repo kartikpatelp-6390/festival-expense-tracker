@@ -8,14 +8,3 @@ services:
     env_file:
       - ./back-end/.env
     restart: unless-stopped
-
-  frontend:
-    container_name: festival-frontend
-    build:
-      context: .
-      dockerfile: front-end/Dockerfile
-    ports:
-      - "4200:80"
-    restart: always
-    depends_on:
-      - backend
