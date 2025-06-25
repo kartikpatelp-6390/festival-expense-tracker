@@ -12,8 +12,8 @@ services:
   frontend:
     container_name: festival-frontend
     build:
-      context: .
-      dockerfile: front-end/Dockerfile
+      context: ./front-end
+      dockerfile: Dockerfile
     ports:
       - "4200:80"
     restart: always
