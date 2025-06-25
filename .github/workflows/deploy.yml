@@ -20,6 +20,14 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
+      - name: Install Angular dependencies
+        working-directory: front-end
+        run: npm ci
+
+      - name: Build Angular app
+        working-directory: front-end
+        run: npm run build -- --configuration production
+
       - name: Deploy files using rsync
         run: |
           rsync -avz \

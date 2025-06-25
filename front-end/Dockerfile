@@ -11,7 +11,8 @@ RUN npm run build --prod
 FROM nginx:1.25-alpine
 
 # Copy built Angular app to nginx html folder
-COPY --from=builder /app/dist/front-end /usr/share/nginx/html
+COPY dist/front-end /usr/share/ngnix/html
+# COPY --from=builder /app/dist/front-end /usr/share/nginx/html
 
 # Copy default nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
