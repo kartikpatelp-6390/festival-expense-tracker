@@ -26,7 +26,9 @@ jobs:
 
       - name: Build Angular app
         working-directory: front-end
-        run: npm run build -- --configuration production
+        run: |
+          export NODE_OPTIONS=--openssl-legacy-provide
+          npm run build -- --configuration production                    
 
       - name: Deploy files using rsync
         run: |
