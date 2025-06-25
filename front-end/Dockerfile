@@ -3,7 +3,7 @@ FROM node:18 AS builder
 
 WORKDIR /app
 
-COPY . .
+COPY package*.json ./
 
 # 👇 Fix: Set legacy OpenSSL mode for Webpack compatibility
 ENV NODE_OPTIONS=--openssl-legacy-provider
