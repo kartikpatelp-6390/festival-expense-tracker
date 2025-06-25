@@ -22,7 +22,11 @@ jobs:
 
       - name: Deploy files using rsync
         run: |
-          rsync -avz --exclude '.git' --exclude 'node_modules' --exclude 'front-end/node_modules' --exclude 'back-end|node_modules' \
+          rsync -avz \
+          --exclude '.git' \
+          --exclude 'node_modules' \
+          --exclude 'front-end/node_modules' \
+          --exclude 'back-end|node_modules' \
           -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
           ./ ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/festival-expense-tracker
         env:
@@ -39,6 +43,6 @@ jobs:
             echo "PORT=3000" > .env
             echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-            cd ..
+            cd /home/ubuntu/festival-expense-tracker
             docker-compose down
             docker-compose up -d --build
