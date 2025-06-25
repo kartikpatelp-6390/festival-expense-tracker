@@ -24,6 +24,10 @@ jobs:
         working-directory: front-end
         run: npm ci
 
+      - name: Install SCSS support
+        working-directory: front-end
+        run: npm install --save-dev sass
+
       - name: Build Angular app
         working-directory: front-end
         run: |
