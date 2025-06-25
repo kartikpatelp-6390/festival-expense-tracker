@@ -8,7 +8,7 @@ COPY package*.json ./
 # 👇 Fix: Set legacy OpenSSL mode for Webpack compatibility
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run build -- --configuration production
 
 # Stage 2: Serve using NGINX
