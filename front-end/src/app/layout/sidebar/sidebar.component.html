@@ -7,12 +7,19 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-widget="treeview">
         <li class="nav-item">
-          <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+          <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>Dashboard</p>
           </a>
         </li>
-        <!-- Add more nav items -->
+        <!-- Start: House List -->
+        <li class="nav-item">
+          <a routerLink="/house" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+            <i class="nav-icon fas fa-house"></i>
+            <p>House</p>
+          </a>
+        </li>
+        <!-- End: House List -->
       </ul>
     </nav>
   </div>

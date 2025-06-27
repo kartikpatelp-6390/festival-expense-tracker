@@ -9,6 +9,7 @@ import { InputComponent } from './shared/input/input.component';
 import { CurrencyFormatPipe } from './shared/pipes/currency-format.pipe';
 import { AutofocusDirective } from './shared/directives/autofocus.directive';
 import { LayoutModule } from "./layout/layout.module";
+import { HouseComponent } from './house/house.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { LayoutModule } from "./layout/layout.module";
     ButtonComponent,
     InputComponent,
     CurrencyFormatPipe,
-    AutofocusDirective
+    AutofocusDirective,
+    HouseComponent
   ],
   imports: [
     HttpClientModule,

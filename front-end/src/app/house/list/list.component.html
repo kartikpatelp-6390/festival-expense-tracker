@@ -1,0 +1,27 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>House List</h2>
+  <button class="btn btn-primary" (click)="addHouse()">Add House</button>
+</div>
+
+<table class="table table-bordered">
+  <thead>
+  <tr>
+    <th>Number</th>
+    <th>Owner</th>
+    <th>Phone</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let house of houses">
+    <td>{{ house.houseNumber }}</td>
+    <td>{{ house.ownerName }}</td>
+    <td>{{ house.phone }}</td>
+    <td>
+      <button class="btn btn-sm btn-warning" (click)="editHouse(house._id)">
+        Edit
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

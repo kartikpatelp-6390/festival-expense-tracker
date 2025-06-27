@@ -1,0 +1,19 @@
+<h2>{{ isEditMode ? 'Edit House' : 'Add House' }}</h2>
+
+<form [formGroup]="houseForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label>House Number</label>
+    <input formControlName="houseNumber" class="form-control" />
+  </div>
+  <div class="form-group">
+    <label>Owner Name</label>
+    <input formControlName="ownerName" class="form-control" />
+  </div>
+  <div class="form-group">
+    <label>Phone</label>
+    <input formControlName="phone" class="form-control" />
+  </div>
+  <button type="submit" class="btn btn-success mt-3">
+    {{ isEditMode ? 'Update' : 'Add' }}
+  </button>
+</form>
