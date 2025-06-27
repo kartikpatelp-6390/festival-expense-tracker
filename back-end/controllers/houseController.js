@@ -1,4 +1,5 @@
 const House = require('../models/House');
+const Festival = require("../models/Festival");
 
 exports.createHouse = async (req, res) => {
     try {
@@ -67,6 +68,16 @@ exports.updateHouse = async (req, res) => {
         const { id } = req.params;
         const updated = await House.findByIdAndUpdate(id, req.body, { new: true });
         res.json({ message: "House updated", data: updated });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteHouse = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await House.findByIdAndDelete(id);
+        res.json({ message: "House deleted" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

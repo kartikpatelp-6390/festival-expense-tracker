@@ -5,7 +5,8 @@ const {
     createHouse,
     getAllHouses,
     getHouse,
-    updateHouse
+    updateHouse,
+    deleteHouse,
 } = require("../controllers/houseController");
 
 
@@ -20,5 +21,8 @@ router.get("/:id", getHouse);
 
 // PUT /api/house/:id
 router.put("/:id", updateHouse);
+
+// DELETE /api/house/:id
+router.delete("/:id", deleteHouse);
 
 module.exports = router;
