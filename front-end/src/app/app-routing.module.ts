@@ -21,6 +21,16 @@ const routes: Routes = [
         path: "house",
         loadChildren: () => import('./house/house.module').then(m => m.HouseModule),
         canActivate: [AuthGuard],
+      },
+      {
+        path: "volunteer",
+        loadChildren: () => import('./volunteer/volunteer.module').then(m => m.VolunteerModule),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "festival",
+        loadChildren: () => import('./festival/festival.module').then(m => m.FestivalModule),
+        canActivate: [AuthGuard],
       }
     ],
   },

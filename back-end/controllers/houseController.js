@@ -1,5 +1,7 @@
 const House = require('../models/House');
 const Festival = require("../models/Festival");
+const queryHelper = require("../utils/queryHelper");
+const Volunteer = require("../models/Volunteer");
 
 exports.createHouse = async (req, res) => {
     try {
@@ -46,8 +48,11 @@ exports.createHouse = async (req, res) => {
 
 exports.getAllHouses = async (req, res) => {
     try {
-        const houses = await House.find();
-        res.json(houses);
+        const result = await queryHelper(
+            House, req.query, ["name"]
+        );
+
+        res.json({ success: true, ...result });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

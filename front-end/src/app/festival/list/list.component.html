@@ -1,0 +1,59 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Festival List</h2>
+  <button class="btn btn-primary" (click)="addFestival()">Add Festival</button>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <!-- /.card-header -->
+      <div class="card-body">
+        <div class="form-group float-right">
+          <label>Select Year</label>
+          <select class="form-control">
+            <option></option>
+            <option *ngFor="let year of years" value="{{ year }}"
+                    [selected]="(selectedYear == year)"
+                    (click)="loadFestivals(year)"
+            >{{ year }}</option>
+          </select>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Year</th>
+              <th>Notes</th>
+              <th style="width: 40px">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let festival of festivals">
+              <td>{{ festival.name }}</td>
+              <td>{{ festival.date | date: "dd-MMM-yyyy" }}</td>
+              <td>{{ festival.year }}</td>
+              <td>{{ festival.notes }}</td>
+              <td>
+                <button class="btn btn-sm btn-warning" (click)="editFestival(festival._id)">
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-footer clearfix">
+        <!-- Pagination -->
+        <app-pagination
+          [totalPages]="total"
+          [currentPage]="page"
+          [limit]="limit"
+          (pageChanged)="changePage($event)">
+        </app-pagination>
+      </div>
+    </div>
+    <!-- /.card -->
+  </div>
+</div>

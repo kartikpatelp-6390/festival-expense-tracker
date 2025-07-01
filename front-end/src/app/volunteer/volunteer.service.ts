@@ -1,12 +1,12 @@
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {environment} from "../../environments/environment";
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HouseService {
+export class VolunteerService {
   private baseUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) { }
@@ -18,7 +18,7 @@ export class HouseService {
     });
   }
 
-  getHouses(page = 1, limit = 10, search = '', sort = ''): Observable<any[]> {
+  getVolunteers(page = 1, limit = 10, search = '', sort = ''): Observable<any[]> {
     let params = new HttpParams()
       .set('page', String(page))
       .set('limit', String(limit));
@@ -26,25 +26,25 @@ export class HouseService {
     if (search) params = params.set('search', search);
     if (sort) params = params.set('sort', sort);
 
-    return this.http.get<any[]>(`${this.baseUrl}/house`, {
+    return this.http.get<any[]>(`${this.baseUrl}/volunteers`, {
       params, headers: this.getHeaders(),
     });
   }
 
-  getHouseById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/house/${id}`, {
+  getVolunteerById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/volunteers/${id}`, {
       headers: this.getHeaders(),
     })
   }
 
-  createHouse(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/house`, data, {
+  createVolunteer(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/volunteers`, data, {
       headers: this.getHeaders(),
     });
   }
 
-  updateHouse(id: string, data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/house/${id}`, data, {
+  updateVolunteer(id: string, data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/volunteers/${id}`, data, {
       headers: this.getHeaders(),
     });
   }

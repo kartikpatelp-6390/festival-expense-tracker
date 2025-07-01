@@ -9,13 +9,32 @@ import { Router } from '@angular/router';
 })
 export class ListComponent implements OnInit {
   houses: any[] = [];
+  total = 0;
+  page = 1;
+  limit = 10;
+  search = '';
 
   constructor(private houseService: HouseService, private router: Router) { }
 
   ngOnInit(): void {
-    this.houseService.getHouses().subscribe((data) => {
-      this.houses = data;
-    });
+    this.loadHouses();
+  }
+
+  loadHouses(){
+    this.houseService.getHouses(this.page, this.limit, this.search).subscribe((res) => {
+      this.houses = res['data'];
+      this.total = res['pagination'].total;
+    })
+  }
+
+  onSearchChange() {
+    this.page = 1;
+    this.loadHouses();
+  }
+
+  changePage(newPage: number) {
+    this.page = newPage;
+    this.loadHouses();
   }
 
   editHouse(id: string) {

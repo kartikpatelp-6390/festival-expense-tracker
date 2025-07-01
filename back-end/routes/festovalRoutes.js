@@ -4,7 +4,8 @@ const {
     createFestival,
     getFestivalsByYear,
     updateFestival,
-    deleteFestival
+    deleteFestival,
+    getFestival,
 } = require("../controllers/festivalController");
 
 // POST /api/festivals
@@ -12,6 +13,9 @@ router.post("/", createFestival);
 
 // GET /api/festivals?year=2025
 router.get("/", getFestivalsByYear);
+
+// GET /api/festivals/:id
+router.get("/:id", getFestival);
 
 // PUT /api/festivals/:id
 router.put("/:id", updateFestival);

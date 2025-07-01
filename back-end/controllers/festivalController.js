@@ -1,4 +1,6 @@
 const Festival = require("../models/Festival");
+const queryHelper = require("../utils/queryHelper");
+const House = require("../models/House");
 
 exports.createFestival = async (req, res) => {
     try {
@@ -18,14 +20,26 @@ exports.createFestival = async (req, res) => {
 
 exports.getFestivalsByYear = async (req, res) => {
     try {
-        const { year } = req.query;
-        const filter = year ? { year: Number(year) } : {};
-        const festivals = await Festival.find(filter).sort({ date: 1 });
-        res.json(festivals);
+        req.query.year = req.query.year ? Number(req.query.year) : {};
+        const result = await queryHelper(
+            Festival, req.query, ["year"]
+        );
+
+        res.json({ success: true, ...result });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.getFestival = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const festival = await Festival.findById(id, req.body, { new: true });
+        res.json({ message: "Festival detail", data: festival });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 
 exports.updateFestival = async (req, res) => {
     try {

@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2>House List</h2>
-  <button class="btn btn-primary" (click)="addHouse()">Add House</button>
+  <h2>Volunteer List</h2>
+  <button class="btn btn-primary" (click)="addVolunteer()">Add Volunteer</button>
 </div>
 
 <div class="row">
@@ -11,23 +11,21 @@
         <table class="table table-bordered">
           <thead>
           <tr>
-            <th>House Number</th>
             <th>Name</th>
             <th>Phone</th>
             <th style="width: 40px">Action</th>
           </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let house of houses">
-              <td>{{ house.houseNumber }}</td>
-              <td>{{ house.ownerName }}</td>
-              <td>{{ house.phone }}</td>
-              <td>
-                <button class="btn btn-sm btn-warning" (click)="editHouse(house._id)">
-                  Edit
-                </button>
-              </td>
-            </tr>
+          <tr *ngFor="let volunteer of volunteers">
+            <td>{{ volunteer.name }}</td>
+            <td>{{ volunteer.phone }}</td>
+            <td>
+              <button class="btn btn-sm btn-warning" (click)="editVolunteer(volunteer._id)">
+                Edit
+              </button>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>

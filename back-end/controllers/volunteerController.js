@@ -1,4 +1,5 @@
 const Volunteer = require("../models/Volunteer");
+const queryHelper = require('../utils/queryHelper');
 
 exports.createVolunteer = async (req, res) => {
     try {
@@ -11,8 +12,11 @@ exports.createVolunteer = async (req, res) => {
 
 exports.getVolunteers = async (req, res) => {
     try {
-        const volunteers = await Volunteer.find().sort({ name: 1 });
-        res.json(volunteers);
+        const result = await queryHelper(
+            Volunteer, req.query, ["name"]
+        );
+
+        res.json({ success: true, ...result });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
