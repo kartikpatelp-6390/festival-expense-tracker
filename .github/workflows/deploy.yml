@@ -29,21 +29,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Install Angular dependencies
-        working-directory: front-end
-        run: npm ci
-
-      - name: Install SCSS support
-        working-directory: front-end
-        run: npm install --save-dev sass
-
-      - name: Build Angular app
-        working-directory: front-end
-        run: |
-          export NODE_OPTIONS=--openssl-legacy-provider
-          npm run build -- --configuration production                    
+          chmod 600 ~/.ssh/id_rsa                    
 
       - name: Deploy files using rsync
         run: |
