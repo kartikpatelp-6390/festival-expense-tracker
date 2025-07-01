@@ -27,11 +27,6 @@ export class ListComponent implements OnInit {
     })
   }
 
-  onSearchChange() {
-    this.page = 1;
-    this.loadHouses();
-  }
-
   changePage(newPage: number) {
     this.page = newPage;
     this.loadHouses();

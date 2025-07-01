@@ -49,7 +49,7 @@ exports.createHouse = async (req, res) => {
 exports.getAllHouses = async (req, res) => {
     try {
         const result = await queryHelper(
-            House, req.query, ["name"]
+            House, req.query, ["ownerName", "houseNumber", "phone"]
         );
 
         res.json({ success: true, ...result });

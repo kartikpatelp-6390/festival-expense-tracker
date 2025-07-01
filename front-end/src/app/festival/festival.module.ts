@@ -6,7 +6,7 @@ import { SharedModule } from "../shared/shared.module";
 import { FestivalRoutingModule } from './festival-routing.module';
 import {ListComponent} from "./list/list.component";
 import {FormComponent} from "./form/form.component";
-import {ReactiveFormsModule} from "@angular/forms";
+import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -17,6 +17,7 @@ import {ReactiveFormsModule} from "@angular/forms";
     ReactiveFormsModule,
     NgbDatepickerModule,
     SharedModule,
+    FormsModule,
   ]
 })
 export class FestivalModule { }

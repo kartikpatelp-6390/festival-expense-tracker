@@ -11,6 +11,7 @@ export class ListComponent implements OnInit {
   festivals: any[] = [];
   years: number[] = [];
   selectedYear: number;
+  year:any = '';
 
   // Pagination
   total = 0;
@@ -29,14 +30,15 @@ export class ListComponent implements OnInit {
     }
 
     this.selectedYear = currentYear;
+    this.year = currentYear;
   }
 
   ngOnInit(): void {
-    this.loadFestivals(this.selectedYear);
+    this.loadFestivals();
   }
 
-  loadFestivals(year) {
-    this.customSearch = {'year': year};
+  loadFestivals() {
+    this.customSearch = {'year': this.year};
 
     this.festivalService.getFestivals(this.page, this.limit, this.search, '', this.customSearch).subscribe((res) => {
       this.festivals = res['data'];
@@ -46,7 +48,7 @@ export class ListComponent implements OnInit {
 
   changePage(newPage: number) {
     this.page = newPage;
-    this.loadFestivals(this.selectedYear);
+    this.loadFestivals();
   }
 
   editFestival(id: string): void {

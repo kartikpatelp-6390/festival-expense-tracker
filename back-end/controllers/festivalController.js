@@ -22,7 +22,7 @@ exports.getFestivalsByYear = async (req, res) => {
     try {
         req.query.year = req.query.year ? Number(req.query.year) : {};
         const result = await queryHelper(
-            Festival, req.query, ["year"]
+            Festival, req.query, ["name"]
         );
 
         res.json({ success: true, ...result });

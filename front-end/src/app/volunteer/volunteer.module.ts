@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { VolunteerRoutingModule } from './volunteer-routing.module';
 import { ListComponent } from './list/list.component';
@@ -14,6 +14,7 @@ import { SharedModule } from "../shared/shared.module";
     VolunteerRoutingModule,
     ReactiveFormsModule,
     SharedModule,
+    FormsModule,
   ]
 })
 export class VolunteerModule { }
