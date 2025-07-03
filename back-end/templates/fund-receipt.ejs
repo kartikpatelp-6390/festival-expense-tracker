@@ -69,7 +69,7 @@
             <p><strong>House Number:</strong> <%= fund.type === 'house' ? fund.houseId.houseNumber : fund.type %></p>
             <p><strong>Date:</strong> <%= fund.formattedDate %></p>
         </div>
-        <p><strong>Name:</strong> <%= fund.type === 'house' ? fund.houseId.ownerName : fund.name %></p>
+        <p><strong>Name:</strong> <%= fund.type === 'house' ? fund.name != '' ? fund.name : fund.houseId.ownerName : fund.name %></p>
         <p><strong>Amount:</strong> ₹ <%= fund.amount %>/-</p>
         <p><strong>Amount in words:</strong> Rupees <%= fund.amountInWords %> Only</p>
         <p><strong>Payment Type:</strong> <%= fund.paymentMethod %></p>
