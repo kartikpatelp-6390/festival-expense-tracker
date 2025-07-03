@@ -15,7 +15,7 @@ const queryHelper = async (model, queryParams = {}, searchFields = [], populateO
     // Apply search logic
     if (search && searchFields.length > 0) {
         queryObject.$or = searchFields.map(field => ({
-            [field]: { $regex: search, $options: 'i' }
+            [field]: { $regex: `.*${search}.*`, $options: 'i' }
         }));
     }
 

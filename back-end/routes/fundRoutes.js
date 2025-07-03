@@ -3,16 +3,28 @@ const router = express.Router();
 const {
     registerFund,
     listFunds,
-    summary
+    summary,
+    getFund,
+    updateFund,
+    deleteFund,
 } = require("../controllers/fundTransationController");
 
 // POST /api/funds — Add a new fund entry
 router.post("/", registerFund);
 
-// GET /api/funds?year=2025 — List all fund entries for a year
+// GET /api/funds/:id
+router.get("/:id", getFund);
+
+// PUT /api/funds/:id
+router.put("/:id", updateFund);
+
+// GET /api/funds?festivalYear=2025 — List all fund entries for a festivalYear
 router.get("/", listFunds);
 
-// GET /api/funds/summary?year=2025 — income grouped by type
+// GET /api/funds/summary?festivalYear=2025 — income grouped by type
 router.get("/summary", summary);
+
+// DELETE /api/funds/:id
+router.delete("/:id", deleteFund);
 
 module.exports = router;

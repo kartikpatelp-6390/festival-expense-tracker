@@ -1,0 +1,109 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Fund List</h2>
+  <button class="btn btn-primary" (click)="addFund()">Add Fund</button>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <!-- /.card-header -->
+      <div class="card-header">
+        <div class="card-tools">
+          <div class="d-flex align-items-center">
+
+
+            <!-- year filer -->
+            <div class="d-inline-block mr-3">
+              <select class="form-control" [(ngModel)]="year" (change)="loadFunds()">
+                <option value="">All</option>
+                <option *ngFor="let year of years" value="{{ year }}"
+                        [selected]="(selectedYear == year)"
+                >{{ year }}
+                </option>
+              </select>
+            </div>
+
+            <!-- search amount -->
+            <div class="d-inline-block mr-3" style="width: 150px;">
+              <input type="text" name="table_search"
+                     class="form-control float-right" placeholder="Search amount"
+                     [(ngModel)]="amount" (ngModelChange)="loadFunds()">
+            </div>
+
+            <!-- search text -->
+            <div class="d-inline-block">
+              <div class="input-group" style="width: 150px;">
+                <input type="text" name="table_search"
+                       class="form-control float-right" placeholder="Search"
+                       [(ngModel)]="search" (ngModelChange)="loadFunds()">
+
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-default">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Type</th>
+            <th>Title/Name</th>
+            <th>Amount</th>
+            <th>Festival Year</th>
+            <th>Payment Method</th>
+            <th>Reference</th>
+            <th style="width: 40px">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let fund of funds">
+            <td>
+              {{ fund.type | titlecase }}
+              <span *ngIf="fund.type == 'house'">
+                ({{ fund.houseId?.houseNumber }})
+              </span>
+            </td>
+            <td>{{ fund.name }}</td>
+            <td>{{ fund.amount | currency:'INR':'symbol' }}</td>
+
+            <td>{{ fund.festivalYear }}</td>
+            <td>
+              <i *ngIf="fund.paymentMethod === 'Cash'" class="fas fa-money-bill-1-wave text-success fa-2x" title="Cash"></i>
+              <i *ngIf="fund.paymentMethod === 'GPay'" class="fa-brands fa-google-pay text-primary fa-2x" title="Gpay"></i>
+            </td>
+            <td>{{ fund.reference }}</td>
+            <td>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-warning mr-2" (click)="editFund(fund._id)">
+                  Edit
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteFund(fund._id)">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-footer clearfix">
+        <!-- Pagination -->
+        <app-pagination
+          [totalPages]="total"
+          [currentPage]="page"
+          [limit]="limit"
+          (pageChanged)="changePage($event)">
+        </app-pagination>
+      </div>
+    </div>
+    <!-- /.card -->
+  </div>
+</div>

@@ -31,6 +31,11 @@ const routes: Routes = [
         path: "festival",
         loadChildren: () => import('./festival/festival.module').then(m => m.FestivalModule),
         canActivate: [AuthGuard],
+      },
+      {
+        path: "fund",
+        loadChildren: () => import('./fund/fund.module').then(m => m.FundModule),
+        canActivate: [AuthGuard],
       }
     ],
   },
