@@ -25,6 +25,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.0",
+    "number-to-words": "^1.2.4",
     "puppeteer": "^24.11.2"
   },
   "devDependencies": {

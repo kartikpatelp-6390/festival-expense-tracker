@@ -3,6 +3,7 @@ const queryHelper = require("../utils/queryHelper");
 const ejs = require("ejs");
 const path = require("path");
 const puppeteer = require("puppeteer");
+const numberToWords = require("number-to-words");
 
 exports.registerFund = async (req, res) => {
     try {
@@ -106,6 +107,15 @@ exports.downloadReceipt = async (req, res) => {
             res.status(404).json({error: "Unable to find fund"});
         }
 
+        fund.amountInWords = toTitleCase(numberToWords.toWords(fund.amount));
+
+        const date = new Date(fund.date);
+        fund.formattedDate = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
         const templatePath = path.join(__dirname, "../templates/fund-receipt.ejs");
 
         const html = await ejs.renderFile(templatePath, { fund });
@@ -116,7 +126,7 @@ exports.downloadReceipt = async (req, res) => {
         });
         const page = await browser.newPage();
         await page.setContent(html);
-        const pdfBuffer = await page.pdf({ format: "A4" });
+        const pdfBuffer = await page.pdf({ width: "175mm", height: "95mm" });
 
         await browser.close();
 
@@ -130,3 +140,10 @@ exports.downloadReceipt = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+function toTitleCase(str) {
+    return str
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}

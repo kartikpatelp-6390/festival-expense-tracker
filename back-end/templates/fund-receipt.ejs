@@ -4,28 +4,79 @@
     <meta charset="UTF-8">
     <title>Fund Receipt</title>
     <style>
-        body { font-family: Arial; padding: 20px; }
-        h2 { text-align: center; }
-        .section { margin-bottom: 10px; }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .receipt {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            margin: 5px 0;
+            font-size: 1.5em;
+            color: saddlebrown;
+        }
+        .header address, .header h3 {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        .details {
+            margin-bottom: 20px;
+        }
+        .details .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .details .row p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .footer-center {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer-text {
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
-<h2>Festival Fund Receipt</h2>
-<div class="section">
-    <strong>Date:</strong> <%= new Date(fund.date).toLocaleDateString() %>
-</div>
-<div class="section">
-    <strong>Received From:</strong>
-    <%= fund.type === 'house' ? fund.houseId.ownerName : fund.name %>
-</div>
-<div class="section">
-    <strong>Amount:</strong> ₹<%= fund.amount %>
-</div>
-<div class="section">
-    <strong>Payment Method:</strong> <%= fund.paymentMethod %>
-</div>
-<div class="section">
-    <strong>Reference:</strong> <%= fund.reference || 'N/A' %>
+<div class="receipt">
+    <div class="header">
+        <h1>Shivam Yuvak Mandal</h1>
+        <address>Shivam Duplex, Behind L&T Knowledge City, Waghodia Road, Ankhol, Vadodara</address>
+        <h3>Festival Collection Receipt <%= fund.festivalYear %></h3>
+    </div>
+    <div class="details">
+        <div class="row">
+            <p><strong>House Number:</strong> <%= fund.type === 'house' ? fund.houseId.houseNumber : fund.type %></p>
+            <p><strong>Date:</strong> <%= fund.formattedDate %></p>
+        </div>
+        <p><strong>Name:</strong> <%= fund.type === 'house' ? fund.houseId.ownerName : fund.name %></p>
+        <p><strong>Amount:</strong> ₹ <%= fund.amount %>/-</p>
+        <p><strong>Amount in words:</strong> Rupees <%= fund.amountInWords %> Only</p>
+        <p><strong>Payment Type:</strong> <%= fund.paymentMethod %></p>
+    </div>
+    <div class="footer-center">
+        <span style="font-size: 12px;">Thank you for contribution</span>
+    </div>
 </div>
 </body>
 </html>
