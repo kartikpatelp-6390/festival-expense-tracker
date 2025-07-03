@@ -9,71 +9,89 @@
       <!-- form start -->
       <form [formGroup]="fundForm" (ngSubmit)="onSubmit()">
         <div class="card-body">
-          <div class="form-group">
-            <label>Type</label>
-            <select class="form-control" formControlName="type">
-              <option value="house">House</option>
-              <option value="sponsor">Sponsor</option>
-              <option value="donor">Donor</option>
-              <option value="balance">Balance</option>
-            </select>
-          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Type</label>
+                <select class="form-control" formControlName="type">
+                  <option value="house">House</option>
+                  <option value="sponsor">Sponsor</option>
+                  <option value="donor">Donor</option>
+                  <option value="balance">Balance</option>
+                </select>
+                <div *ngIf="fundForm.get('type')?.touched && fundForm.get('type')?.invalid" class="text-danger">
+                  Type is required.
+                </div>
+              </div>
 
-          <div *ngIf="fundForm.get('type')?.value === 'house'" class="form-group">
-            <label>House</label>
-            <select class="form-control" formControlName="houseId">
-              <option *ngFor="let house of houses" [value]="house._id">{{ house.houseNumber }}</option>
-            </select>
-          </div>
+              <div *ngIf="fundForm.get('type')?.value === 'house'" class="form-group">
+                <label>House</label>
+                <select class="form-control" formControlName="houseId">
+                  <option *ngFor="let house of houses" [value]="house._id">{{ house.houseNumber }}</option>
+                </select>
+              </div>
 
-          <!-- Owner Name Display -->
-          <div *ngIf="selectedHouseOwner" class="form-group">
-            <label>Owner</label>
-            <input class="form-control" [value]="selectedHouseOwner" disabled />
-          </div>
+              <!-- Owner Name Display -->
+              <div *ngIf="selectedHouseOwner" class="form-group">
+                <label>Owner</label>
+                <input class="form-control" [value]="selectedHouseOwner" disabled />
+              </div>
 
-          <div *ngIf="fundForm.get('type')?.value !== 'house'" class="form-group">
-            <label>Name</label>
-            <input class="form-control" formControlName="name">
-          </div>
+              <div class="form-group">
+                <label>Name</label>
+                <input class="form-control" formControlName="name" placeholder="{{ selectedHouseOwner }}" >
+                <div *ngIf="fundForm.get('name')?.touched && fundForm.get('name')?.invalid" class="text-danger">
+                  Name is required.
+                </div>
+              </div>
 
-          <div class="form-group">
-            <label>Festival Year</label>
-            <select class="form-control" formControlName="festivalYear">
-              <option *ngFor="let year of years" value="{{ year }}"
-                      [selected]="(selectedYear == year)"
-              >{{ year }}
-              </option>
-            </select>
-          </div>
+              <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" formControlName="date">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Festival Year</label>
+                <select class="form-control" formControlName="festivalYear">
+                  <option *ngFor="let year of years" value="{{ year }}"
+                          [selected]="(selectedYear == year)"
+                  >{{ year }}
+                  </option>
+                </select>
+              </div>
 
-          <div class="form-group">
-            <label>Amount</label>
-            <input type="number" class="form-control" formControlName="amount">
-          </div>
+              <div class="form-group">
+                <label>Amount</label>
+                <input type="number" class="form-control" formControlName="amount">
+                <div *ngIf="fundForm.get('amount')?.touched && fundForm.get('amount')?.invalid" class="text-danger">
+                  Amount is required.
+                </div>
+              </div>
 
-          <div class="form-group">
-            <label>Payment Method</label>
-            <select class="form-control" formControlName="paymentMethod">
-              <option value="Cash">Cash</option>
-              <option value="GPay">GPay</option>
-            </select>
-          </div>
+              <div class="form-group">
+                <label>Payment Method</label>
+                <select class="form-control" formControlName="paymentMethod">
+                  <option value="Cash">Cash</option>
+                  <option value="GPay">GPay</option>
+                </select>
+                <div *ngIf="fundForm.get('paymentMethod')?.touched && fundForm.get('paymentMethod')?.invalid" class="text-danger">
+                  Payment Method is required.
+                </div>
+              </div>
 
-          <div class="form-group">
-            <label>Reference</label>
-            <input class="form-control" formControlName="reference">
-          </div>
-
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" class="form-control" formControlName="date">
+              <div class="form-group">
+                <label>Reference</label>
+                <textarea class="form-control" formControlName="reference" rows="5"></textarea>
+              </div>
+            </div>
           </div>
         </div>
         <!-- /.card-body -->
 
         <div class="card-footer">
-          <button type="submit" class="btn btn-primary mr-3">Submit</button>
+          <button type="submit" class="btn btn-primary mr-3">Save</button>
+          <button type="button" class="btn btn-primary mr-3" (click)="saveAndDownload()">Save <i class="fas fa-download"></i></button>
           <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
         </div>
       </form>

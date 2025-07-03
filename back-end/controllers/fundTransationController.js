@@ -24,6 +24,11 @@ exports.registerFund = async (req, res) => {
 exports.updateFund = async (req, res) => {
     try {
         const { id } = req.params;
+
+        if (req.body.houseId === '') {
+            delete req.body.houseId; // Remove invalid empty string
+        }
+
         const fund = await FundTransaction.findByIdAndUpdate(id, req.body, { new: true });
         const populated = await fund.populate("houseId");
         res.status(201).json({ message: "Fund updated", data: fund });
@@ -54,7 +59,7 @@ exports.listFunds = async (req, res) => {
 
         // Post-process each fund record
         result.data = result.data.map(fund => {
-            if (fund.type === 'house' && fund.houseId && fund.houseId.ownerName) {
+            if (fund.type === 'house' && fund.houseId && fund.name === '' && fund.houseId.ownerName) {
                 return {
                     ...fund.toObject(), // convert Mongoose doc to plain JS object
                     name: fund.houseId.ownerName

@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validator, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FundService } from "../fund.service";
 import { HouseService } from "../../house/house.service";
+import {triggerFileDownload} from "../../utils";
 
 @Component({
   selector: 'app-form',
@@ -17,6 +18,7 @@ export class FormComponent implements OnInit {
   fundId: string = '';
   selectedHouseOwner: string = '';
   selectedYear:any = '';
+  isDownload = false;
 
   constructor(
     private fb: FormBuilder,
@@ -99,15 +101,51 @@ export class FormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.isEditMode) {
-      this.fundService.updateFund(this.fundId, this.fundForm.value).subscribe(() => {
-        this.router.navigate(['/fund']);
-      });
-    } else {
-      this.fundService.createFund(this.fundForm.value).subscribe(() => {
-        this.router.navigate(['/fund']);
+    // If type is house and name is blank, assign selectedHouseOwner to name
+    if (this.fundForm.get('type')?.value === 'house' && !this.fundForm.get('name')?.value && this.selectedHouseOwner) {
+      this.fundForm.patchValue({
+        name: this.selectedHouseOwner
       });
     }
+
+    // Trigger validation manually
+    this.fundForm.markAllAsTouched();
+
+    // Prevent submit if form invalid
+    if (this.fundForm.invalid) return;
+
+    if (this.isEditMode) {
+      this.fundService.updateFund(this.fundId, this.fundForm.value).subscribe((res) => {
+        this.redirect(res);
+      });
+    } else {
+      this.fundService.createFund(this.fundForm.value).subscribe((res) => {
+        this.redirect(res);
+      });
+    }
+  }
+
+  redirect(res) {
+    this.fundId = res.data._id;
+    if (this.isDownload) {
+      this.downloadReceipt(this.fundId);
+      if (!this.isEditMode) {
+        this.router.navigate(['/fund/edit', this.fundId]);
+      }
+    } else {
+      this.onCancel();
+    }
+  }
+
+  downloadReceipt(id: string) {
+    this.fundService.downloadReceipt(id).subscribe((blob)=>{
+      triggerFileDownload(blob, `receipt_${id}.pdf`);
+    });
+  }
+
+  saveAndDownload() {
+    this.isDownload = true;
+    this.onSubmit();
   }
 
   onCancel() {
