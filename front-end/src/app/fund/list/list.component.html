@@ -81,6 +81,9 @@
             <td>{{ fund.reference }}</td>
             <td>
               <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-info mr-2" (click)="downloadReceipt(fund._id)">
+                  <i class="fas fa-download"></i>
+                </button>
                 <button class="btn btn-sm btn-warning mr-2" (click)="editFund(fund._id)">
                   Edit
                 </button>

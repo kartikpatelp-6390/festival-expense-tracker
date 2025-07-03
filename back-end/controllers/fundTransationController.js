@@ -1,5 +1,8 @@
 const FundTransaction = require("../models/FundTransaction");
 const queryHelper = require("../utils/queryHelper");
+const ejs = require("ejs");
+const path = require("path");
+const puppeteer = require("puppeteer");
 
 exports.registerFund = async (req, res) => {
     try {
@@ -89,6 +92,40 @@ exports.deleteFund = async (req, res) => {
         const { id } = req.params;
         await FundTransaction.findByIdAndDelete(id);
         res.json({ message: "Fund deleted" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.downloadReceipt = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const fund = await FundTransaction.findById(id).populate("houseId");
+
+        if (!fund) {
+            res.status(404).json({error: "Unable to find fund"});
+        }
+
+        const templatePath = path.join(__dirname, "../templates/fund-receipt.ejs");
+
+        const html = await ejs.renderFile(templatePath, { fund });
+
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+        const page = await browser.newPage();
+        await page.setContent(html);
+        const pdfBuffer = await page.pdf({ format: "A4" });
+
+        await browser.close();
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename=receipt_${fund._id}.pdf`,
+        });
+
+        res.send(pdfBuffer);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

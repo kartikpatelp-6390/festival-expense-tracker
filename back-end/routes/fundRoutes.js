@@ -7,6 +7,7 @@ const {
     getFund,
     updateFund,
     deleteFund,
+    downloadReceipt,
 } = require("../controllers/fundTransationController");
 
 // POST /api/funds — Add a new fund entry
@@ -26,5 +27,8 @@ router.get("/summary", summary);
 
 // DELETE /api/funds/:id
 router.delete("/:id", deleteFund);
+
+// GET /api/funds/download/:id/receipt - downloadReceipt
+router.get("/download/:id", downloadReceipt);
 
 module.exports = router;

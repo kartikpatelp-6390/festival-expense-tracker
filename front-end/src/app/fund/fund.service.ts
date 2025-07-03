@@ -60,4 +60,10 @@ export class FundService {
       headers: this.getHeaders(),
     });
   }
+
+  downloadReceipt(id: string) {
+    return this.http.get(`${this.baseUrl}/download/${id}`, {
+      headers: this.getHeaders(), responseType: 'blob',
+    });
+  }
 }

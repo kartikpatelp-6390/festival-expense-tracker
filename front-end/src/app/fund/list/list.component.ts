@@ -74,4 +74,15 @@ export class ListComponent implements OnInit {
     }
   }
 
+  downloadReceipt(id: string) {
+    this.fundService.downloadReceipt(id).subscribe((blob)=>{
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `receipt_${id}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
+
 }
