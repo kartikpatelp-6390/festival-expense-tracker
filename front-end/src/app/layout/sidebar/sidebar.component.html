@@ -7,14 +7,16 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-widget="treeview">
         <li class="nav-item">
-          <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+          <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
+             (click)="closeSidebar()">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>Dashboard</p>
           </a>
         </li>
         <!-- Start: House List -->
         <li class="nav-item">
-          <a routerLink="/house" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+          <a routerLink="/house" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
+             (click)="closeSidebar()">
             <i class="nav-icon fas fa-house"></i>
             <p>House</p>
           </a>
@@ -22,7 +24,8 @@
         <!-- End: House List -->
         <!-- Start: Volunteer List -->
         <li class="nav-item">
-          <a routerLink="/volunteer" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+          <a routerLink="/volunteer" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
+             (click)="closeSidebar()">
             <i class="nav-icon fas fa-user-group"></i>
             <p>Volunteer</p>
           </a>
@@ -30,7 +33,8 @@
         <!-- End: Volunteer List -->
         <!-- Start: Festival List -->
         <li class="nav-item">
-          <a routerLink="/festival" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+          <a routerLink="/festival" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
+             (click)="closeSidebar()">
             <i class="nav-icon fas fa-star"></i>
             <p>Festival</p>
           </a>
@@ -38,7 +42,8 @@
         <!-- End: Festival List -->
         <!-- Start: Festival List -->
         <li class="nav-item">
-          <a routerLink="/fund" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+          <a routerLink="/fund" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
+             (click)="closeSidebar()">
             <i class="nav-icon fas fa-indian-rupee-sign"></i>
             <p>Funds</p>
           </a>

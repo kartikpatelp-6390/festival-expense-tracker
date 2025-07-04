@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+declare var $: any;
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -11,5 +12,11 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  closeSidebar() {
+    if ($ && $('[data-widget="pushmenu"]').length) {
+      $('[data-widget="pushmenu"]').PushMenu('collapse');
+    }
+  };
 
 }
