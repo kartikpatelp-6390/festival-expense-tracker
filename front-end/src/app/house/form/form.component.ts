@@ -49,4 +49,8 @@ export class FormComponent implements OnInit {
     }
   }
 
+  onCancel() {
+    this.router.navigate(['/house']);
+  }
+
 }

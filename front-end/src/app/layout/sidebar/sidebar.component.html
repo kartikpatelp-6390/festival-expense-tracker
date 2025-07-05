@@ -26,7 +26,7 @@
         <li class="nav-item">
           <a routerLink="/volunteer" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
              (click)="closeSidebar()">
-            <i class="nav-icon fas fa-user-group"></i>
+            <i class="nav-icon fas fa-users"></i>
             <p>Volunteer</p>
           </a>
         </li>
@@ -49,6 +49,15 @@
           </a>
         </li>
         <!-- End: Festival List -->
+        <!-- Start: Expense List -->
+        <li class="nav-item">
+          <a routerLink="/expense" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
+             (click)="closeSidebar()">
+            <i class="nav-icon fas fa-chart-column"></i>
+            <p>Expenses</p>
+          </a>
+        </li>
+        <!-- End: Expense List -->
       </ul>
     </nav>
   </div>

@@ -57,6 +57,10 @@ export class FormComponent implements OnInit {
       });
     }
   }
+
+  onCancel() {
+    this.router.navigate(['/festival']);
+  }
 }
 
 function formatDateToInput(iso: string): string {

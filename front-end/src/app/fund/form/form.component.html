@@ -13,7 +13,8 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label>Type</label>
-                <select class="form-control" formControlName="type">
+                <select class="form-control" formControlName="type"
+                        [ngClass]="{'is-invalid': fundForm.get('type')?.touched && fundForm.get('type')?.invalid}">
                   <option value="house">House</option>
                   <option value="sponsor">Sponsor</option>
                   <option value="donor">Donor</option>
@@ -39,7 +40,8 @@
 
               <div class="form-group">
                 <label>Name</label>
-                <input class="form-control" formControlName="name" placeholder="{{ selectedHouseOwner }}" >
+                <input class="form-control" formControlName="name" placeholder="{{ selectedHouseOwner }}"
+                       [ngClass]="{'is-invalid': fundForm.get('name')?.touched && fundForm.get('name')?.invalid}">
                 <div *ngIf="fundForm.get('name')?.touched && fundForm.get('name')?.invalid" class="text-danger">
                   Name is required.
                 </div>
@@ -63,7 +65,8 @@
 
               <div class="form-group">
                 <label>Amount</label>
-                <input type="number" class="form-control" formControlName="amount">
+                <input type="number" class="form-control" formControlName="amount"
+                       [ngClass]="{'is-invalid': fundForm.get('amount')?.touched && fundForm.get('amount')?.invalid}">
                 <div *ngIf="fundForm.get('amount')?.touched && fundForm.get('amount')?.invalid" class="text-danger">
                   Amount is required.
                 </div>
@@ -71,7 +74,8 @@
 
               <div class="form-group">
                 <label>Payment Method</label>
-                <select class="form-control" formControlName="paymentMethod">
+                <select class="form-control" formControlName="paymentMethod"
+                        [ngClass]="{'is-invalid': fundForm.get('paymentMethod')?.touched && fundForm.get('paymentMethod')?.invalid}">
                   <option value="Cash">Cash</option>
                   <option value="GPay">GPay</option>
                 </select>
@@ -90,8 +94,8 @@
         <!-- /.card-body -->
 
         <div class="card-footer">
-          <button type="submit" class="btn btn-primary mr-3">Save</button>
-          <button type="button" class="btn btn-primary mr-3" (click)="saveAndDownload()">Save <i class="fas fa-download"></i></button>
+          <button type="submit" class="btn btn-primary mr-3">{{ isEditMode ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-primary mr-3" (click)="saveAndDownload()">{{ isEditMode ? 'Update' : 'Add' }} <i class="fas fa-download"></i></button>
           <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
         </div>
       </form>

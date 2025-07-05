@@ -1,0 +1,118 @@
+<h2>{{ isEditMode ? 'Edit Expense' : 'Add Expense' }}</h2>
+
+<div class="row">
+  <!-- left column -->
+  <div class="col-md-12">
+    <!-- general form elements -->
+    <div class="card card-primary">
+      <!-- /.card-header -->
+      <!-- form start -->
+      <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Festival</label>
+                <select class="form-control" formControlName="festivalId"
+                        [ngClass]="{'is-invalid': expenseForm.get('festivalId')?.touched && expenseForm.get('festivalId')?.invalid}">
+                  <option value="">Select Festival</option>
+                  <option *ngFor="let festival of festivals" [value]="festival._id">
+                    {{ festival.name }} ({{ festival.year }})
+                  </option>
+                </select>
+                <small class="text-danger" *ngIf="expenseForm.get('festivalId')?.touched && expenseForm.get('festivalId')?.hasError('required')">
+                  Festival is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Volunteer</label> (<a routerLink="/volunteer/add">New Volunteer</a>)
+                <select class="form-control" formControlName="volunteerId"
+                        [ngClass]="{'is-invalid': expenseForm.get('volunteerId')?.touched && expenseForm.get('volunteerId')?.invalid}">
+                  <option value="">Select Volunteer</option>
+                  <option *ngFor="let volunteer of volunteers" [value]="volunteer._id">
+                    {{ volunteer.name }}
+                  </option>
+                </select>
+                <small class="text-danger" *ngIf="expenseForm.get('volunteerId')?.touched && expenseForm.get('volunteerId')?.hasError('required')">
+                  Volunteer is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Category</label>
+                <input class="form-control"
+                       formControlName="category"
+                       list="categorySuggestions"
+                       placeholder="Enter category"
+                       [ngClass]="{'is-invalid': expenseForm.get('category')?.touched && expenseForm.get('category')?.invalid}"/>
+                <datalist id="categorySuggestions">
+                  <option *ngFor="let category of categories" [value]="category"></option>
+                </datalist>
+                <small class="text-danger" *ngIf="expenseForm.get('category')?.touched && expenseForm.get('category')?.hasError('required')">
+                  Category is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control" formControlName="description" rows="3"
+                          [ngClass]="{'is-invalid': expenseForm.get('description')?.touched && expenseForm.get('description')?.invalid}"></textarea>
+                <small class="text-danger" *ngIf="expenseForm.get('description')?.touched && expenseForm.get('description')?.hasError('required')">
+                  Description is required
+                </small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Amount</label>
+                <input type="number" class="form-control" formControlName="amount"
+                       [ngClass]="{'is-invalid': expenseForm.get('amount')?.touched && expenseForm.get('amount')?.invalid}"/>
+                <small class="text-danger" *ngIf="expenseForm.get('amount')?.touched && expenseForm.get('amount')?.hasError('required')">
+                  Amount is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Payment Method</label>
+                <select class="form-control" formControlName="paymentMethod"
+                        [ngClass]="{'is-invalid': expenseForm.get('paymentMethod')?.touched && expenseForm.get('paymentMethod')?.invalid}">
+                  <option value="Cash">Cash</option>
+                  <option value="GPay">GPay</option>
+                </select>
+                <small class="text-danger" *ngIf="expenseForm.get('paymentMethod')?.touched && expenseForm.get('paymentMethod')?.hasError('required')">
+                  Payment Method is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" formControlName="date" />
+              </div>
+
+              <div class="form-group" *ngIf="isEditMode">
+                <label>Is Settled</label><br />
+                <div class="custom-control custom-switch">
+                  <input type="checkbox"
+                         class="custom-control-input"
+                         id="isSettledSwitch"
+                         disabled
+                         formControlName="isSettled" />
+                  <label class="custom-control-label" for="isSettledSwitch">
+                    {{ expenseForm.get('isSettled')?.value ? 'Yes' : 'No' }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary mr-3">{{ isEditMode ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

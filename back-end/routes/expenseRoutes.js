@@ -6,7 +6,9 @@ const {
     deleteExpense,
     getFestivalExpense,
     getSummary,
-    settleVolunteerExpenses
+    settleVolunteerExpenses,
+    getCategories,
+    getFestivalExpenseById,
 } = require("../controllers/expenseController");
 
 // POST /api/expenses — add expense
@@ -31,6 +33,12 @@ router.put("/settle", settleVolunteerExpenses);
 
 // PUT /api/expenses/:id
 router.put("/:id", updateExpense);
+
+// GET /api/expenses/categories
+router.get("/categories", getCategories);
+
+// GET /api/expenses/:id
+router.get("/:id", getFestivalExpenseById);
 
 // DELETE /api/expenses/:id
 router.delete("/:id", deleteExpense);

@@ -30,9 +30,9 @@ export class FormComponent implements OnInit {
     this.fundForm = this.fb.group({
       type: ['', Validators.required],
       houseId: [''],
-      name: [''],
+      name: ['', Validators.required],
       amount: ['', Validators.required],
-      paymentMethod: [''],
+      paymentMethod: ['', Validators.required],
       reference: [''],
       date: [new Date().toISOString().split('T')[0]],
       festivalYear: [new Date().getFullYear()],

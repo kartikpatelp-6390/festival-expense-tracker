@@ -36,6 +36,11 @@ const routes: Routes = [
         path: "fund",
         loadChildren: () => import('./fund/fund.module').then(m => m.FundModule),
         canActivate: [AuthGuard],
+      },
+      {
+        path: "expense",
+        loadChildren: () => import('./expense/expense.module').then(m => m.ExpenseModule),
+        canActivate: [AuthGuard],
       }
     ],
   },

@@ -20,7 +20,9 @@ const expenseSchema = new mongoose.Schema({
         required: false
     },
     isSettled: { type: Boolean, default: false },
-    settledOn: Date
+    isSettledAt: { type: Date },
+    settledOn: Date,
+    festivalYear: { type: Number, required: true }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Expense", expenseSchema);
