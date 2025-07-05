@@ -17,11 +17,11 @@
       <!-- /.card-header -->
       <div class="card-header">
         <div class="card-tools">
-          <div class="d-flex align-items-center">
+          <div class="d-flex flex-wrap align-items-center">
 
 
             <!-- year filer -->
-            <div class="d-inline-block mr-3">
+            <div class="mr-3 mb-2">
               <select class="form-control" [(ngModel)]="year" (change)="onYearChange()">
                 <option value="">All</option>
                 <option *ngFor="let year of years" value="{{ year }}"
@@ -32,7 +32,7 @@
             </div>
 
             <!-- festival filer -->
-            <div class="d-inline-block mr-3">
+            <div class="mr-3 mb-2">
               <select class="form-control" [(ngModel)]="festivalId" (change)="onFestivalChange()">
                 <option value="">All</option>
                 <option *ngFor="let festival of festivals" value="{{ festival._id }}"
@@ -43,7 +43,7 @@
             </div>
 
             <!-- volunteer filer -->
-            <div class="d-inline-block mr-3">
+            <div class="mr-3 mb-2">
               <select class="form-control" [(ngModel)]="volunteerId" (change)="loadExpenses()">
                 <option value="">All</option>
                 <option *ngFor="let volunteer of volunteers" value="{{ volunteer._id }}"
@@ -54,14 +54,14 @@
             </div>
 
             <!-- search amount -->
-            <div class="d-inline-block mr-3" style="width: 150px;">
+            <div class="mr-3 mb-2" style="width: 150px;">
               <input type="text" name="table_search"
                      class="form-control float-right" placeholder="Search amount"
                      [(ngModel)]="amount" (ngModelChange)="loadExpenses()">
             </div>
 
             <!-- search text -->
-            <div class="d-inline-block">
+            <div class="mb-2">
               <div class="input-group" style="width: 150px;">
                 <input type="text" name="table_search"
                        class="form-control float-right" placeholder="Search"
