@@ -114,9 +114,6 @@
             <td>
               <span *ngIf="!expense.isSettled" class="badge badge-danger" role="button" (click)="toggleSettled(expense._id, expense.isSettled)">Not Settled</span>
               <span *ngIf="expense.isSettled" class="badge badge-secondary" role="button" (click)="toggleSettled(expense._id, expense.isSettled)">Settled</span>
-
-<!--              <i *ngIf="expense.isSettled" class="fas fa-circle-check text-success"></i>-->
-<!--              <i *ngIf="!expense.isSettled" class="fas fa-circle-xmark text-danger"></i>-->
             </td>
             <td>
               <div class="d-flex align-items-center">

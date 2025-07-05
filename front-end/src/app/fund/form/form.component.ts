@@ -5,6 +5,7 @@ import { FundService } from "../fund.service";
 import { HouseService } from "../../house/house.service";
 import {triggerFileDownload} from "../../utils";
 import {NotificationService} from "../../services/notification.service";
+import {formatDate} from "@angular/common";
 
 @Component({
   selector: 'app-form',
@@ -20,6 +21,7 @@ export class FormComponent implements OnInit {
   selectedHouseOwner: string = '';
   selectedYear:any = '';
   isDownload = false;
+  isAddNew : boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -103,11 +105,22 @@ export class FormComponent implements OnInit {
   }
 
   onSubmit() {
+
+    const formData = { ...this.fundForm.value };
+
     // If type is house and name is blank, assign selectedHouseOwner to name
     if (this.fundForm.get('type')?.value === 'house' && !this.fundForm.get('name')?.value && this.selectedHouseOwner) {
       this.fundForm.patchValue({
         name: this.selectedHouseOwner
       });
+    }
+
+    // If house type is not selected then delete houseId from parameter
+    if(this.fundForm.get('type')?.value !== 'house') {
+      // If houseId is blank, remove it from the form data
+      if (!formData.houseId || formData.houseId.trim() === '') {
+        delete formData.houseId;
+      }
     }
 
     // Trigger validation manually
@@ -117,12 +130,12 @@ export class FormComponent implements OnInit {
     if (this.fundForm.invalid) return;
 
     if (this.isEditMode) {
-      this.fundService.updateFund(this.fundId, this.fundForm.value).subscribe((res) => {
+      this.fundService.updateFund(this.fundId, formData).subscribe((res) => {
         this.notification.success("Fund updated successfully.");
         this.redirect(res);
       });
     } else {
-      this.fundService.createFund(this.fundForm.value).subscribe((res) => {
+      this.fundService.createFund(formData).subscribe((res) => {
         this.notification.success("Fund created successfully.");
         this.redirect(res);
       });
@@ -136,6 +149,8 @@ export class FormComponent implements OnInit {
       if (!this.isEditMode) {
         this.router.navigate(['/fund/edit', this.fundId]);
       }
+    } if (this.isAddNew) {
+      this.router.navigate(['/fund/add']);
     } else {
       this.onCancel();
     }
@@ -150,6 +165,12 @@ export class FormComponent implements OnInit {
   saveAndDownload() {
     this.isDownload = true;
     this.onSubmit();
+  }
+
+  saveAndNew() {
+    this.isAddNew = true;
+    this.onSubmit();
+    this.router.navigate(['/fund/add']);
   }
 
   onCancel() {
