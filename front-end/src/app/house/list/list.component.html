@@ -46,9 +46,14 @@
               <td>{{ house.ownerName }}</td>
               <td>{{ house.phone }}</td>
               <td>
-                <button class="btn btn-sm btn-warning" (click)="editHouse(house._id)">
-                  Edit
-                </button>
+                <div class="d-flex align-items-center">
+                  <button class="btn btn-sm btn-warning mr-2" (click)="editHouse(house._id)">
+                    Edit
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteHouse(house._id)">
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>

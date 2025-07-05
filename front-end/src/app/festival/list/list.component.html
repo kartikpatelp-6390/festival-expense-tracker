@@ -60,9 +60,14 @@
               <td>{{ festival.year }}</td>
               <td>{{ festival.notes }}</td>
               <td>
-                <button class="btn btn-sm btn-warning" (click)="editFestival(festival._id)">
-                  Edit
-                </button>
+                <div class="d-flex align-items-center">
+                  <button class="btn btn-sm btn-warning mr-2" (click)="editFestival(festival._id)">
+                    Edit
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteFestival(festival._id)">
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>

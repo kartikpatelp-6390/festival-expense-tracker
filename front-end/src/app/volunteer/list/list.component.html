@@ -44,9 +44,14 @@
             <td>{{ volunteer.name }}</td>
             <td>{{ volunteer.phone }}</td>
             <td>
-              <button class="btn btn-sm btn-warning" (click)="editVolunteer(volunteer._id)">
-                Edit
-              </button>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-warning mr-2" (click)="editVolunteer(volunteer._id)">
+                  Edit
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteVolunteer(volunteer._id)">
+                  Delete
+                </button>
+              </div>
             </td>
           </tr>
           </tbody>

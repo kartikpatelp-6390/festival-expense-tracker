@@ -3,6 +3,7 @@ import { ExpenseService } from '../expense.service'
 import { VolunteerService } from "../../volunteer/volunteer.service";
 import { FestivalService } from "../../festival/festival.service";
 import { Router } from '@angular/router';
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-expense-list',
@@ -30,7 +31,8 @@ export class ListComponent implements OnInit {
     private expenseService: ExpenseService,
     private volunteerService: VolunteerService,
     private festivalService: FestivalService,
-    private router: Router
+    private router: Router,
+    private notification: NotificationService,
   ) {
     const startYear = 2024;
     const currentYear = new Date().getFullYear();
@@ -83,10 +85,11 @@ export class ListComponent implements OnInit {
     if(confirm('Are you sure want to delete this expense ?')) {
       this.expenseService.deleteExpense(id).subscribe({
         next: () => {
+          this.notification.success('Expense Deleted Successfully.');
           this.loadExpenses();
         },
         error: err => {
-          alert('Failed to delete expense');
+          this.notification.error('Failed to delete expense');
         }
       })
     }
@@ -129,10 +132,11 @@ export class ListComponent implements OnInit {
       this.expenseService.updateExpenseSettled(payload).subscribe({
         next: (res) => {
           // Update local row state without reloading entire list
+          this.notification.success(`Expense <b>${settle}</b> successfully.`);
           this.loadExpenses();
         },
         error: (err) => {
-          alert('Failed to update settlement status');
+          this.notification.error('Failed to update settlement status');
         }
       });
     }

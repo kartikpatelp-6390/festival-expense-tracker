@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HouseService } from '../house.service';
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-form',
@@ -18,6 +19,7 @@ export class FormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private houseService: HouseService,
+    private notification: NotificationService,
   ) {
     this.houseForm = this.fb.group({
       houseNumber: [''],
@@ -40,10 +42,12 @@ export class FormComponent implements OnInit {
   onSubmit() {
     if (this.isEditMode) {
       this.houseService.updateHouse(this.houseId, this.houseForm.value).subscribe(() => {
+        this.notification.success('House Updated Successfully.');
         this.router.navigate(['/house']);
       });
     } else {
       this.houseService.createHouse(this.houseForm.value).subscribe(() => {
+        this.notification.success('House Created Successfully.');
         this.router.navigate(['/house']);
       });
     }

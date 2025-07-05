@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {VolunteerService} from "../volunteer.service";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-form',
@@ -18,6 +19,7 @@ export class FormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private volunteerService: VolunteerService,
+    private notification: NotificationService,
   ) {
     this.volunteerForm = this.fb.group({
       name: [''],
@@ -39,10 +41,12 @@ export class FormComponent implements OnInit {
   onSubmit() {
     if (this.isEditMode) {
       this.volunteerService.updateVolunteer(this.volunteerId, this.volunteerForm.value).subscribe(() => {
+        this.notification.success('Volunteer updated successfully.');
         this.router.navigate(['/volunteer']);
       });
     } else {
       this.volunteerService.createVolunteer(this.volunteerForm.value).subscribe(() => {
+        this.notification.success('Volunteer created successfully.');
         this.router.navigate(['/volunteer']);
       });
     }

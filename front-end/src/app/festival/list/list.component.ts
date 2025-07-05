@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {FestivalService} from "../festival.service";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-festival-list',
@@ -20,7 +21,11 @@ export class ListComponent implements OnInit {
   search = '';
   customSearch: any = {};
 
-  constructor(private festivalService: FestivalService, private router: Router) {
+  constructor(
+    private festivalService: FestivalService,
+    private router: Router,
+    private notification: NotificationService,
+  ) {
     const startYear = 2024;
     const currentYear = new Date().getFullYear();
     const endYear = currentYear + 10;
@@ -57,6 +62,20 @@ export class ListComponent implements OnInit {
 
   addFestival(): void {
     this.router.navigate(['/festival/add']);
+  }
+
+  deleteFestival(id: string) {
+    if(confirm('Are you sure want to delete this festival ?')) {
+      this.festivalService.deleteFestival(id).subscribe({
+        next: () => {
+          this.notification.success('Festival deleted successfully.');
+          this.loadFestivals();
+        },
+        error: err => {
+          this.notification.error('Failed to delete this festival.');
+        }
+      })
+    }
   }
 
 }

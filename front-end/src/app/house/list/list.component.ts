@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HouseService } from '../house.service';
 import { Router } from '@angular/router';
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-house-list',
@@ -14,7 +15,11 @@ export class ListComponent implements OnInit {
   limit = 10;
   search = '';
 
-  constructor(private houseService: HouseService, private router: Router) { }
+  constructor(
+    private houseService: HouseService,
+    private router: Router,
+    private notification: NotificationService,
+  ) { }
 
   ngOnInit(): void {
     this.loadHouses();
@@ -38,6 +43,20 @@ export class ListComponent implements OnInit {
 
   addHouse() {
     this.router.navigate(['/house/add']);
+  }
+
+  deleteHouse(id: string) {
+    if(confirm('Are you sure want to delete this house ?')) {
+      this.houseService.deleteHouse(id).subscribe({
+        next: () => {
+          this.notification.success('House deleted successfully.');
+          this.loadHouses();
+        },
+        error: err => {
+          this.notification.error('Failed to delete this house.');
+        }
+      })
+    }
   }
 
 }

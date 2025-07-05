@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FundService} from "../fund.service";
 import { Router } from '@angular/router';
 import { triggerFileDownload } from "../../utils";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-fund-list',
@@ -21,7 +22,11 @@ export class ListComponent implements OnInit {
   search = '';
   customSearch: any = {};
 
-  constructor(private fundService: FundService, private router: Router) {
+  constructor(
+    private fundService: FundService,
+    private router: Router,
+    private notification: NotificationService,
+  ) {
     const startYear = 2024;
     const currentYear = new Date().getFullYear();
     const endYear = currentYear + 10;
@@ -66,10 +71,11 @@ export class ListComponent implements OnInit {
     if(confirm('Are you sure want to delete this fund ?')) {
       this.fundService.deleteFund(id).subscribe({
         next: () => {
+          this.notification.success('Fund deleted successfully.');
           this.loadFunds();
         },
         error: err => {
-          alert('Failed to delete fund');
+          this.notification.error('Failed to delete this fund.');
         }
       })
     }

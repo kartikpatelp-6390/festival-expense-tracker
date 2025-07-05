@@ -4,9 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from "../expense.service";
 import { FestivalService } from "../../festival/festival.service";
 import { VolunteerService } from "../../volunteer/volunteer.service";
-import {triggerFileDownload} from "../../utils";
-import {FundService} from "../../fund/fund.service";
-import {HouseService} from "../../house/house.service";
+import { NotificationService } from "../../services/notification.service";
 
 @Component({
   selector: 'app-expense-form',
@@ -29,6 +27,7 @@ export class FormComponent implements OnInit {
     private expenseService: ExpenseService,
     private festivalService: FestivalService,
     private volunteerService: VolunteerService,
+    private notification: NotificationService,
   ) {
     this.expenseForm = this.fb.group({
       festivalId: ['', Validators.required],
@@ -95,10 +94,12 @@ export class FormComponent implements OnInit {
 
     if (this.isEditMode) {
       this.expenseService.updateExpense(this.expenseId, formData).subscribe(() => {
+        this.notification.success('Expense Updated Successfully.');
         this.router.navigate(['/expense']);
       });
     } else {
       this.expenseService.createExpense(formData).subscribe(() => {
+        this.notification.success('Expense Added Successfully.');
         this.router.navigate(['/expense']);
       });
     }

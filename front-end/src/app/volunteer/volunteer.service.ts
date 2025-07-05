@@ -48,4 +48,10 @@ export class VolunteerService {
       headers: this.getHeaders(),
     });
   }
+
+  deleteVolunteer(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
 }

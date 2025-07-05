@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FestivalService} from "../festival.service";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-form',
@@ -18,6 +19,7 @@ export class FormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private festivalService: FestivalService,
+    private notification: NotificationService,
   ) {
     this.festivalForm = this.fb.group({
       name: [''],
@@ -49,10 +51,12 @@ export class FormComponent implements OnInit {
   onSubmit() {
     if (this.isEditMode) {
       this.festivalService.updateFestival(this.festivalId, this.festivalForm.value).subscribe(() => {
+        this.notification.success('Festival updated successfully.');
         this.router.navigate(['/festival']);
       });
     } else {
       this.festivalService.createFestival(this.festivalForm.value).subscribe(() => {
+        this.notification.success('Festival created successfully.');
         this.router.navigate(['/festival']);
       });
     }

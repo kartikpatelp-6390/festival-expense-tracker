@@ -54,4 +54,10 @@ export class FestivalService {
       headers: this.getHeaders(),
     });
   }
+
+  deleteFestival(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
 }

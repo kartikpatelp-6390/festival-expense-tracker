@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FundService } from "../fund.service";
 import { HouseService } from "../../house/house.service";
 import {triggerFileDownload} from "../../utils";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-form',
@@ -25,7 +26,8 @@ export class FormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fundService: FundService,
-    private houseService: HouseService
+    private houseService: HouseService,
+    private notification: NotificationService,
   ) {
     this.fundForm = this.fb.group({
       type: ['', Validators.required],
@@ -116,10 +118,12 @@ export class FormComponent implements OnInit {
 
     if (this.isEditMode) {
       this.fundService.updateFund(this.fundId, this.fundForm.value).subscribe((res) => {
+        this.notification.success("Fund updated successfully.");
         this.redirect(res);
       });
     } else {
       this.fundService.createFund(this.fundForm.value).subscribe((res) => {
+        this.notification.success("Fund created successfully.");
         this.redirect(res);
       });
     }
