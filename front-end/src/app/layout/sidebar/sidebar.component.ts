@@ -14,7 +14,8 @@ export class SidebarComponent implements OnInit {
   }
 
   closeSidebar() {
-    if ($ && $('[data-widget="pushmenu"]').length) {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile && $ && $('[data-widget="pushmenu"]').length) {
       $('[data-widget="pushmenu"]').PushMenu('collapse');
     }
   };

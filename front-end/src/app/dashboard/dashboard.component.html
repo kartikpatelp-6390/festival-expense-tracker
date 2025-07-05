@@ -1,1 +1,147 @@
-<p>dashboard works!</p>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Dashboard</h2>
+  <div>
+    <select class="form-control" [(ngModel)]="selectedYear" (change)="loadDashboardSummary()">
+      <option value="">All</option>
+      <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+    </select>
+  </div>
+</div>
+
+<!-- Info boxes -->
+<div class="row">
+  <div class="col-6" *ngFor="let box of infoBoxes"
+      [class.col-lg-6]="(box.type === 'fund' || box.type === 'expense')"
+      [class.col-lg-6]="(box.type === 'balance')"
+      [class.col-lg-3]="(box.type === 'house' || box.type === 'volunteer')"
+  >
+
+    <div class="small-box"
+         [class.bg-info]="(box.type === 'fund')"
+         [class.bg-success]="(box.type === 'expense')"
+         [class.bg-primary]="(box.type === 'balance')"
+         [class.bg-warning]="(box.type === 'house')"
+         [class.bg-danger]="(box.type === 'volunteer')"
+    >
+      <div class="inner">
+        <h3 *ngIf="(box.type === 'expense' || box.type === 'fund' || box.type === 'balance')">{{ box.value | currency:'INR':'symbol' }}</h3>
+        <h3 *ngIf="(box.type === 'house' || box.type === 'volunteer')">{{ box.value }}</h3>
+
+        <p>{{ box.label }}</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-bag"></i>
+      </div>
+      <a [routerLink]="box.type !== 'balance' ? '/' + box.type : null" class="small-box-footer">
+        <span *ngIf="(box.type !== 'balance')"> More info <i class="fas fa-arrow-circle-right"></i> </span>
+        <span *ngIf="(box.type === 'balance')">&nbsp;</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Latest fund -->
+<div class="row">
+  <!-- Start: Funds -->
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header border-transparent">
+        <h3 class="card-title">Recent Funds</h3>
+
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table m-0">
+              <thead>
+              <tr>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fund of recentFunds">
+                  <td>
+                    {{ fund.type | titlecase }}
+                    <span *ngIf="fund.type == 'house'">({{ fund.houseId?.houseNumber }})</span>
+                  </td>
+                  <td>{{ fund.name }}</td>
+                  <td>{{ fund.amount | currency:'INR':'symbol' }}</td>
+                  <td>
+                    <i *ngIf="fund.paymentMethod === 'Cash'" class="fas fa-money-bill-1-wave text-success fa-2x" title="Cash"></i>
+                    <i *ngIf="fund.paymentMethod === 'GPay'" class="fa-brands fa-google-pay text-primary fa-2x" title="Gpay"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.table-responsive -->
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer clearfix">
+          <a href="javascript:void(0)" routerLink="/fund/add" class="btn btn-sm btn-info float-left">Add New Fund</a>
+          <a href="javascript:void(0)" routerLink="/fund" class="btn btn-sm btn-secondary float-right">View All Funds</a>
+        </div>
+        <!-- /.card-footer -->
+      </div>
+  </div>
+  <!-- End: Funds -->
+
+  <!-- Start: Expenses -->
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header border-transparent">
+        <h3 class="card-title">Recent Expenses</h3>
+
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table m-0">
+            <thead>
+            <tr>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Volunteer</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let expense of recentExpenses">
+              <td>{{ expense.category | titlecase }}</td>
+              <td>{{ expense.amount | currency:'INR':'symbol' }}</td>
+              <td>{{ expense.volunteerId?.name }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- /.table-responsive -->
+      </div>
+      <!-- /.card-body -->
+      <div class="card-footer clearfix">
+        <a href="javascript:void(0)" routerLink="/expense/add" class="btn btn-sm btn-info float-left">Add New Expense</a>
+        <a href="javascript:void(0)" routerLink="/expense" class="btn btn-sm btn-secondary float-right">View All Expense</a>
+      </div>
+      <!-- /.card-footer -->
+    </div>
+  </div>
+  <!-- End: Expense -->
+
+</div>
