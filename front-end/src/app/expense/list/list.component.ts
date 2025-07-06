@@ -149,4 +149,8 @@ export class ListComponent implements OnInit {
     }
   }
 
+  canToggle(expense: any) {
+    return this.role === 'admin' || (this.role === 'volunteer' && this.user?.id === (expense.volunteerId?._id || expense.volunteerId));
+  }
+
 }

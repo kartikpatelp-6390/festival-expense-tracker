@@ -112,8 +112,16 @@
             </td>
             <td>{{ expense.date | date: "dd-MMM-yyyy" }}</td>
             <td>
-              <span *ngIf="!expense.isSettled" class="badge badge-danger" role="button" (click)="toggleSettled(expense._id, expense.isSettled)">Not Settled</span>
-              <span *ngIf="expense.isSettled" class="badge badge-success" role="button" (click)="toggleSettled(expense._id, expense.isSettled)">Settled</span>
+              <span *ngIf="!expense.isSettled" class="badge badge-danger" role="button"
+                    (click)="toggleSettled(expense._id, expense.isSettled)"
+                    [class.disabled]="!canToggle(expense)"
+                    [style.pointer-events]="!canToggle(expense) ? 'none' : 'auto'"
+              >Not Settled</span>
+              <span *ngIf="expense.isSettled" class="badge badge-success" role="button"
+                    (click)="toggleSettled(expense._id, expense.isSettled)"
+                    [class.disabled]="!canToggle(expense)"
+                    [style.pointer-events]="!canToggle(expense) ? 'none' : 'auto'"
+              >Settled</span>
             </td>
             <td>
               <div class="d-flex align-items-center">
