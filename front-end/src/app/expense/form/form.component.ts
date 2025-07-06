@@ -5,6 +5,7 @@ import { ExpenseService } from "../expense.service";
 import { FestivalService } from "../../festival/festival.service";
 import { VolunteerService } from "../../volunteer/volunteer.service";
 import { NotificationService } from "../../services/notification.service";
+import {AuthService} from "../../core/services/auth.service";
 
 @Component({
   selector: 'app-expense-form',
@@ -19,6 +20,8 @@ export class FormComponent implements OnInit {
 
   isEditMode = false;
   expenseId: string = ''
+  role: string | null = '';
+  user: any = null;
 
   constructor(
     private fb: FormBuilder,
@@ -28,6 +31,7 @@ export class FormComponent implements OnInit {
     private festivalService: FestivalService,
     private volunteerService: VolunteerService,
     private notification: NotificationService,
+    private authService: AuthService,
   ) {
     this.expenseForm = this.fb.group({
       festivalId: ['', Validators.required],
@@ -42,21 +46,36 @@ export class FormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.role = this.authService.getRole();
+    this.user = this.authService.getUser();
+
     this.loadFestivals();
     this.loadVolunteers();
     this.loadCategories();
 
     this.expenseId = this.route.snapshot.params['id'];
+
+    if (this.role === 'volunteer') {
+      this.expenseForm.patchValue({ volunteerId: this.user?.id });
+      this.expenseForm.get('volunteerId')?.disable(); // Disable dropdown for volunteers
+    }
+
     if (this.expenseId) {
       this.isEditMode = true;
       this.expenseService.getExpenseById(this.expenseId).subscribe(res => {
         const expense = res['data'];
+
         this.expenseForm.patchValue({
           ...expense,
           festivalId: expense.festivalId?._id || expense.festivalId,
           volunteerId: expense.volunteerId?._id || expense.volunteerId,
           date: expense.date ? expense.date.split('T')[0] : '',
         });
+
+        // Disable volunteerId if user is volunteer and editing
+        if (this.role === 'volunteer') {
+          this.expenseForm.get('volunteerId')?.disable();
+        }
       });
     }
   }
@@ -87,6 +106,11 @@ export class FormComponent implements OnInit {
 
     const formData = { ...this.expenseForm.value };
     delete formData.isSettled;
+
+    // Force volunteerId if volunteer is logged in
+    if (this.role === 'volunteer') {
+      formData.volunteerId = this.user?.id;
+    }
 
     // Add festivalYear from selected festival
     const selectedFestival = this.festivals.find(f => f._id === formData.festivalId);

@@ -17,6 +17,30 @@
             <label for="phone">Phone</label>
             <input formControlName="phone" type="number" class="form-control" id="phone" placeholder="Enter phone">
           </div>
+
+          <!-- Password field -->
+          <div *ngIf="!isEditMode" class="form-group"
+               [ngClass]="{'is-invalid': volunteerForm.get('password')?.touched && volunteerForm.get('password')?.invalid}">
+            <label>Password</label>
+            <input type="password" class="form-control" formControlName="password">
+            <div *ngIf="volunteerForm.get('password')?.touched && volunteerForm.get('password')?.invalid" class="text-danger">
+              Password is required.
+            </div>
+          </div>
+
+          <!-- Show toggle only in edit mode -->
+          <div *ngIf="isEditMode" class="form-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="togglePasswordField()">Change Password</button>
+          </div>
+
+          <div *ngIf="isEditMode && showPasswordField" class="form-group"
+               [ngClass]="{'is-invalid': volunteerForm.get('password')?.touched && volunteerForm.get('password')?.invalid}">
+            <label>New Password</label>
+            <input type="password" class="form-control" formControlName="password">
+            <div *ngIf="volunteerForm.get('password')?.touched && volunteerForm.get('password')?.invalid" class="text-danger">
+              Password is required.
+            </div>
+          </div>
         </div>
         <!-- /.card-body -->
 

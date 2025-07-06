@@ -4,6 +4,7 @@ import {HomeComponent} from "./dashboard/home/home.component";
 import {MainLayoutComponent} from "./layout/main-layout/main-layout.component";
 import {AuthGuard} from "./core/guards/auth.guard";
 import {LoginComponent} from "./auth/login/login.component";
+import {RoleGuard} from "./core/guards/role.guard";
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -15,32 +16,38 @@ const routes: Routes = [
       {
         path: "dashboard",
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
-        canActivate: [AuthGuard],
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'volunteer'] }
       },
       {
         path: "house",
         loadChildren: () => import('./house/house.module').then(m => m.HouseModule),
-        canActivate: [AuthGuard],
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'volunteer'] }
       },
       {
         path: "volunteer",
         loadChildren: () => import('./volunteer/volunteer.module').then(m => m.VolunteerModule),
-        canActivate: [AuthGuard],
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'volunteer'] }
       },
       {
         path: "festival",
         loadChildren: () => import('./festival/festival.module').then(m => m.FestivalModule),
-        canActivate: [AuthGuard],
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] }
       },
       {
         path: "fund",
         loadChildren: () => import('./fund/fund.module').then(m => m.FundModule),
-        canActivate: [AuthGuard],
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'volunteer'] }
       },
       {
         path: "expense",
         loadChildren: () => import('./expense/expense.module').then(m => m.ExpenseModule),
-        canActivate: [AuthGuard],
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'volunteer'] }
       }
     ],
   },

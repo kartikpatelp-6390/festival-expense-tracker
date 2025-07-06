@@ -117,8 +117,14 @@
             </td>
             <td>
               <div class="d-flex align-items-center">
-                <button class="btn btn-sm btn-warning mr-2" (click)="editExpense(expense._id)">Edit</button>
-                <button class="btn btn-sm btn-danger" (click)="deleteExpense(expense._id)">Delete</button>
+                <button class="btn btn-sm btn-warning mr-2" (click)="editExpense(expense._id)"
+                    [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === expense.volunteerId?._id))">
+                  Edit
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteExpense(expense._id)"
+                        [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === expense.volunteerId?._id))">
+                  Delete
+                </button>
               </div>
             </td>
           </tr>

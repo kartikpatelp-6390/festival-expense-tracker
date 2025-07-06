@@ -1,10 +1,17 @@
 const Volunteer = require("../models/Volunteer");
 const queryHelper = require('../utils/queryHelper');
+const bcrypt = require("bcryptjs");
 
 exports.createVolunteer = async (req, res) => {
     try {
-        const volunteer = await Volunteer.create(req.body);
-        res.status(201).json({ message: "Volunteer added", data: volunteer });
+
+        // if role is admin then only create volunteer
+        if (req.user.role === "volunteer") {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+
+        const result = await volunteerAddUpdate(req.body);
+        res.status(201).json(result);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -35,8 +42,14 @@ exports.getVolunteer = async (req, res) => {
 exports.updateVolunteer = async (req, res) => {
     try {
         const { id } = req.params;
-        const updated = await Volunteer.findByIdAndUpdate(id, req.body, { new: true });
-        res.json({ message: "Volunteer updated", data: updated });
+
+        // Volunteers can only update themselves
+        if (req.user.role === 'volunteer' && req.user.id.toString() !== id) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+
+        const result = await volunteerAddUpdate(req.body, id);
+        res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -51,5 +64,19 @@ exports.deleteVolunteer = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+async function volunteerAddUpdate(data, id = null) {
+    if (data.password) {
+        data.password = await bcrypt.hash(data.password, 10);
+    }
+
+    if (id) {
+        const updated = await Volunteer.findByIdAndUpdate(id, data, {new: true});
+        return { message: "Volunteer updated", data: updated };
+    } else {
+        const created = await Volunteer.create(data);
+        return { message: "Volunteer created", data: created };
+    }
+}
 
 module.exports;

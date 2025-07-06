@@ -4,6 +4,7 @@ import { VolunteerService } from "../../volunteer/volunteer.service";
 import { FestivalService } from "../../festival/festival.service";
 import { Router } from '@angular/router';
 import {NotificationService} from "../../services/notification.service";
+import {AuthService} from "../../core/services/auth.service";
 
 @Component({
   selector: 'app-expense-list',
@@ -26,6 +27,8 @@ export class ListComponent implements OnInit {
   limit = 10;
   search = '';
   customSearch: any = {};
+  role: string | null = '';
+  user: any = null;
 
   constructor(
     private expenseService: ExpenseService,
@@ -33,6 +36,7 @@ export class ListComponent implements OnInit {
     private festivalService: FestivalService,
     private router: Router,
     private notification: NotificationService,
+    private authService: AuthService,
   ) {
     const startYear = 2024;
     const currentYear = new Date().getFullYear();
@@ -47,6 +51,9 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.role = this.authService.getRole();
+    this.user = this.authService.getUser();
+
     this.loadVolunteers();
     this.loadFestivals()
     this.loadExpenses();

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {AuthService} from "../../core/services/auth.service";
 
 declare var $: any;
 @Component({
@@ -7,10 +8,12 @@ declare var $: any;
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
+  role: string | null = '';
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.role = this.authService.getRole();
   }
 
   closeSidebar() {
