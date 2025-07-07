@@ -40,6 +40,7 @@ export class FormComponent implements OnInit {
       reference: [''],
       date: [new Date().toISOString().split('T')[0]],
       festivalYear: [new Date().getFullYear()],
+      alternativePhone: [''],
     })
 
     const startYear = 2024;
@@ -55,7 +56,7 @@ export class FormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.houseService.getHouses().subscribe((res) => {
+    this.houseService.getHouses(1,300).subscribe((res) => {
       this.houses = res['data'];
     });
 
@@ -85,6 +86,8 @@ export class FormComponent implements OnInit {
 
         // Show owner name from populated object
         this.selectedHouseOwner = fundData.houseId?.ownerName || '';
+
+        this.onTypeChange(this.fundForm.value.type);
 
         // Trigger validators again if needed
         this.updateValidators(fundData.type);
@@ -121,6 +124,7 @@ export class FormComponent implements OnInit {
       if (!formData.houseId || formData.houseId.trim() === '') {
         delete formData.houseId;
       }
+      delete formData.alternativePhone;
     }
 
     // Trigger validation manually
@@ -175,5 +179,23 @@ export class FormComponent implements OnInit {
 
   onCancel() {
     this.router.navigate(['/fund']);
+  }
+
+  onTypeChange(type: string) {
+    if (type === 'aarti') {
+      this.fundForm.get('name')?.disable();
+      this.fundForm.get('houseId')?.disable();
+      this.fundForm.patchValue({ name: '', houseId: '' });
+    } else {
+      this.fundForm.get('name')?.enable();
+      this.fundForm.get('houseId')?.enable();
+    }
+  }
+
+  onHouseChange(houseId: string) {
+    const selectedHouse = this.houses.find(h => h._id === houseId);
+    if (selectedHouse && selectedHouse.phone) {
+      this.fundForm.patchValue({ alternativePhone: selectedHouse.phone });
+    }
   }
 }

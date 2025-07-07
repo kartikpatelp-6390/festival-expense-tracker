@@ -1,6 +1,7 @@
 const House = require('../models/House');
 const Festival = require("../models/Festival");
 const queryHelper = require("../utils/queryHelper");
+const normalizePhone = require('../utils/commonUtils');
 const Volunteer = require("../models/Volunteer");
 
 exports.createHouse = async (req, res) => {
@@ -21,17 +22,27 @@ exports.createHouse = async (req, res) => {
             house.ownerName = ownerName ?? house.ownerName;
             house.phone = phone ?? house.phone;
 
+            if (house.phone) {
+                house.phone = normalizePhone(house.phone);
+            }
+
             const updatedHouse = await house.save();
             return res.status(200).json({
                 message: "House updated successfully",
                 data: updatedHouse
             });
         } else {
+
+            let finalPhone = phone;
+            if (phone) {
+                finalPhone = normalizePhone(phone);
+            }
+
             // Create new house
             const newHouse = new House({
                 houseNumber: normalizedHouseNumber,
                 ownerName,
-                phone,
+                finalPhone,
             });
 
             const savedHouse = await newHouse.save();
@@ -71,7 +82,16 @@ exports.getHouse = async (req, res) => {
 exports.updateHouse = async (req, res) => {
     try {
         const { id } = req.params;
-        const updated = await House.findByIdAndUpdate(id, req.body, { new: true });
+
+        if (req.body.phone) {
+            req.body.phone = normalizePhone(req.body.phone);
+        }
+
+        const formData = {
+            ...req.body,
+        }
+
+        const updated = await House.findByIdAndUpdate(id, formData, { new: true });
         res.json({ message: "House updated", data: updated });
     } catch (err) {
         res.status(500).json({ error: err.message });

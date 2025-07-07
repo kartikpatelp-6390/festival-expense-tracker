@@ -50,7 +50,7 @@ export class VolunteerService {
   }
 
   deleteVolunteer(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${id}`, {
+    return this.http.delete(`${this.baseUrl}/volunteers/${id}`, {
       headers: this.getHeaders(),
     });
   }

@@ -3,6 +3,9 @@ import { FundService} from "../fund.service";
 import { Router } from '@angular/router';
 import { triggerFileDownload } from "../../utils";
 import {NotificationService} from "../../services/notification.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ReceiptComponent } from "../../receipt/receipt/receipt.component";
+import {HouseService} from "../../house/house.service";
 
 @Component({
   selector: 'app-fund-list',
@@ -26,6 +29,8 @@ export class ListComponent implements OnInit {
     private fundService: FundService,
     private router: Router,
     private notification: NotificationService,
+    private modalService: NgbModal,
+    private houseService: HouseService,
   ) {
     const startYear = 2024;
     const currentYear = new Date().getFullYear();
@@ -85,6 +90,29 @@ export class ListComponent implements OnInit {
     this.fundService.downloadReceipt(id).subscribe((blob)=>{
       triggerFileDownload(blob, `receipt_${id}.pdf`);
     });
+  }
+
+  openReceiptModal(fund: any) {
+
+    let phoneNumbers: string[] = [];
+    if (fund.type === 'house') {
+      const house = fund.houseId;
+      const phone = house.phone?.trim();
+      const alternative = fund.alternativePhone?.trim();
+
+      if (phone && alternative && phone !== alternative) {
+        phoneNumbers = [phone, alternative];
+      } else if (phone || alternative) {
+        phoneNumbers = [phone || alternative].filter(Boolean);
+      }
+    } else {
+      const alternative = fund.alternativePhone?.trim();
+      phoneNumbers = [alternative].filter(Boolean);
+    }
+
+    const modalRef = this.modalService.open(ReceiptComponent, { size: 'md' });
+    modalRef.componentInstance.fundId = fund._id;
+    modalRef.componentInstance.phoneNumbers = phoneNumbers;
   }
 
 }

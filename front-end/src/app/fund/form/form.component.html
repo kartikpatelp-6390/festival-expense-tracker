@@ -14,8 +14,10 @@
               <div class="form-group">
                 <label>Type</label>
                 <select class="form-control" formControlName="type"
-                        [ngClass]="{'is-invalid': fundForm.get('type')?.touched && fundForm.get('type')?.invalid}">
+                        [ngClass]="{'is-invalid': fundForm.get('type')?.touched && fundForm.get('type')?.invalid}"
+                        (change)="onTypeChange($event.target.value)">
                   <option value="house">House</option>
+                  <option value="aarti">Aarti</option>
                   <option value="sponsor">Sponsor</option>
                   <option value="donor">Donor</option>
                   <option value="balance">Balance</option>
@@ -25,9 +27,11 @@
                 </div>
               </div>
 
-              <div *ngIf="fundForm.get('type')?.value === 'house'" class="form-group">
-                <label>House</label>
-                <select class="form-control" formControlName="houseId">
+              <div *ngIf="fundForm.get('type')?.value === 'house'" class="form-group"
+                   (change)="onHouseChange($event.target.value)">
+                <label>House</label> (<a routerLink="/house/add">New House</a>)
+                <select class="form-control" formControlName="houseId"
+                        [disabled]="fundForm.get('houseId')?.disabled">
                   <option *ngFor="let house of houses" [value]="house._id">{{ house.houseNumber }}</option>
                 </select>
               </div>
@@ -41,10 +45,17 @@
               <div class="form-group">
                 <label>Name</label>
                 <input class="form-control" formControlName="name" placeholder="{{ selectedHouseOwner }}"
-                       [ngClass]="{'is-invalid': fundForm.get('name')?.touched && fundForm.get('name')?.invalid}">
+                       [ngClass]="{'is-invalid': fundForm.get('name')?.touched && fundForm.get('name')?.invalid}"
+                       [disabled]="fundForm.get('name')?.disabled">
                 <div *ngIf="fundForm.get('name')?.touched && fundForm.get('name')?.invalid" class="text-danger">
                   Name is required.
                 </div>
+              </div>
+
+              <!-- Alternative Phone Number -->
+              <div class="form-group" *ngIf="fundForm.get('type')?.value === 'house'">
+                <label>Alternative Phone</label>
+                <input type="text" class="form-control" formControlName="alternativePhone">
               </div>
 
               <div class="form-group">

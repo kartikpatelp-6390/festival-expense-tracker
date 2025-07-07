@@ -1,5 +1,6 @@
 const FundTransaction = require("../models/FundTransaction");
 const queryHelper = require("../utils/queryHelper");
+const normalizePhone = require('../utils/commonUtils');
 const ejs = require("ejs");
 const path = require("path");
 const puppeteer = require("puppeteer");
@@ -29,7 +30,19 @@ exports.updateFund = async (req, res) => {
             delete req.body.houseId; // Remove invalid empty string
         }
 
-        const fund = await FundTransaction.findByIdAndUpdate(id, req.body, { new: true });
+        let finalPhone = '';
+        if (req.body.type === "house" && req.body.houseId) {
+            finalPhone = normalizePhone(req.body.alternativePhone);
+        } else {
+            delete req.body.alternativePhone;
+        }
+
+        const formData = {
+            ...req.body,
+            alternativePhone: finalPhone,
+        }
+
+        const fund = await FundTransaction.findByIdAndUpdate(id, formData, { new: true });
         const populated = await fund.populate("houseId");
         res.status(201).json({ message: "Fund updated", data: fund });
     } catch (err) {

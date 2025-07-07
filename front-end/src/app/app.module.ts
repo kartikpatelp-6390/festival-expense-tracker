@@ -14,9 +14,10 @@ import { AutofocusDirective } from './shared/directives/autofocus.directive';
 import { LayoutModule } from "./layout/layout.module";
 import { HouseComponent } from './house/house.component';
 import { VolunteerComponent } from './volunteer/volunteer.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { FestivalComponent } from './festival/festival.component';
 import { SharedModule } from "./shared/shared.module";
+import { ReceiptComponent } from './receipt/receipt/receipt.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { SharedModule } from "./shared/shared.module";
     AutofocusDirective,
     HouseComponent,
     VolunteerComponent,
-    FestivalComponent
+    FestivalComponent,
+    ReceiptComponent
   ],
   imports: [
     HttpClientModule,
@@ -45,6 +47,7 @@ import { SharedModule } from "./shared/shared.module";
       enableHtml: true,
       closeButton: true,
     }),
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

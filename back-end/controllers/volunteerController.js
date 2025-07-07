@@ -1,5 +1,6 @@
 const Volunteer = require("../models/Volunteer");
 const queryHelper = require('../utils/queryHelper');
+const normalizePhone = require('../utils/commonUtils');
 const bcrypt = require("bcryptjs");
 
 exports.createVolunteer = async (req, res) => {
@@ -70,11 +71,17 @@ async function volunteerAddUpdate(data, id = null) {
         data.password = await bcrypt.hash(data.password, 10);
     }
 
+    const finalPhone = normalizePhone(data.phone);
+    const formData = {
+        ...data,
+        phone: finalPhone,
+    }
+
     if (id) {
-        const updated = await Volunteer.findByIdAndUpdate(id, data, {new: true});
+        const updated = await Volunteer.findByIdAndUpdate(id, formData, {new: true});
         return { message: "Volunteer updated", data: updated };
     } else {
-        const created = await Volunteer.create(data);
+        const created = await Volunteer.create(formData);
         return { message: "Volunteer created", data: created };
     }
 }

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const fundTransactionSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ["house", "sponsor", "donor", "balance"],
+        enum: ["house", "sponsor", "donor", "balance", "aarti"],
         required: true
     },
     houseId: {
@@ -21,7 +21,8 @@ const fundTransactionSchema = new mongoose.Schema({
     },
     reference: String,     // Optional payment reference number
     date: { type: Date, default: Date.now },
-    festivalYear: { type: Number, required: true }
+    festivalYear: { type: Number, required: true },
+    alternativePhone: { type: String },
 }, { timestamps: true });
 
 module.exports = mongoose.model("FundTransaction", fundTransactionSchema);

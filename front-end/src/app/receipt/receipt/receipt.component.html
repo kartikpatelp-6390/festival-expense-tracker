@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h5 class="modal-title">Send Receipt via WhatsApp</h5>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <label>Select Phone Number</label>
+    <select class="form-control"
+            [(ngModel)]="selectedPhone"
+            [disabled]="phoneNumbers.length === 0">
+      <option *ngFor="let number of phoneNumbers" [value]="number">
+        {{ number }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Or Enter New Number</label>
+    <input class="form-control" type="text" [(ngModel)]="customPhone">
+  </div>
+
+  <div *ngIf="errorMessage" class="text-danger mt-2">
+    {{ errorMessage }}
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="close()">Cancel</button>
+  <button class="btn btn-success" (click)="sendReceipt()">Send on WhatsApp</button>
+</div>
