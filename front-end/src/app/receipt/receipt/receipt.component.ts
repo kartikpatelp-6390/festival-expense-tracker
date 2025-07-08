@@ -46,8 +46,17 @@ export class ReceiptComponent implements OnInit {
     try {
       this.fundService.downloadReceipt(this.fundId, 'send').subscribe((res: any) => {
         const url = res.url;
-        const message = encodeURIComponent(`Thank you for contribution :) %0a Get you collection receipt from following link: \n${url}\n Jay Shree Ram`);
-        window.open(`https://wa.me/?text=${message}`, '_blank');
+
+        const message = `🙏 Thank you for your contribution!
+
+📄 Get your collection receipt from the link below:
+${url}
+
+🚩 Jay Shree Ram 🚩`;
+
+        // const encodedMessage = encodeURIComponent(`Thank you for contribution :) %0a Get you collection receipt from following link: \n${url}\n Jay Shree Ram`);
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
       });
       this.activeModal.close();
     } catch (err) {

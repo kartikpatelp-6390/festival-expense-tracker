@@ -7,6 +7,7 @@ const path = require("path");
 const puppeteer = require("puppeteer");
 const numberToWords = require("number-to-words");
 const { uploadToS3 } = require('../utils/s3Uploader');
+const generateShortLink = require('../utils/generateShortLink');
 
 exports.registerFund = async (req, res) => {
     try {
@@ -153,7 +154,10 @@ exports.downloadReceipt = async (req, res) => {
 
         if (action === 'send') {
             const s3Url = await uploadToS3(pdfBuffer, `receipt_${id}.pdf`);
-            return res.send({ url: s3Url });
+            // return res.send({ url: s3Url });
+
+            const shortUrl = await generateShortLink(s3Url);
+            return res.send({ url: shortUrl });
         } else {
             res.set({
                 'Content-Type': 'application/pdf',
