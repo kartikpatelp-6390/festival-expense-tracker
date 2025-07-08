@@ -154,10 +154,10 @@ exports.downloadReceipt = async (req, res) => {
 
         if (action === 'send') {
             const s3Url = await uploadToS3(pdfBuffer, `receipt_${id}.pdf`);
-            // return res.send({ url: s3Url });
+            return res.send({ url: s3Url });
 
-            const shortUrl = await generateShortLink(s3Url);
-            return res.send({ url: shortUrl });
+            // const shortUrl = await generateShortLink(s3Url);
+            // return res.send({ url: shortUrl });
         } else {
             res.set({
                 'Content-Type': 'application/pdf',
