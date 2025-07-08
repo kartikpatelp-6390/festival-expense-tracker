@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
 import {FundService} from "../../fund/fund.service";
 
 @Component({
@@ -45,23 +44,11 @@ export class ReceiptComponent implements OnInit {
     }
 
     try {
-      console.log(this.fundId);
-      const blob = await this.fundService.downloadReceipt(this.fundId).toPromise();
-
-      const fileName = `Receipt_${this.fundId}.pdf`;
-      const blobUrl = window.URL.createObjectURL(blob);
-
-      // Download
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = fileName;
-      a.click();
-
-      // WhatsApp
-      const msg = `Thank you for contribution:\n\n`;
-      const encodedMsg = encodeURIComponent(msg + fileName);
-      window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');
-
+      this.fundService.downloadReceipt(this.fundId, 'send').subscribe((res: any) => {
+        const url = res.url;
+        const message = encodeURIComponent(`Thank you for contribution :) %0a Get you collection receipt from following link: \n${url}\n Jay Shree Ram`);
+        window.open(`https://wa.me/?text=${message}`, '_blank');
+      });
       this.activeModal.close();
     } catch (err) {
       alert('Failed to generate receipt');

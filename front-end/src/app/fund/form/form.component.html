@@ -13,7 +13,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label>Type</label>
-                <select class="form-control" formControlName="type"
+                <select class="form-control select2" formControlName="type"
                         [ngClass]="{'is-invalid': fundForm.get('type')?.touched && fundForm.get('type')?.invalid}"
                         (change)="onTypeChange($event.target.value)">
                   <option value="house">House</option>
@@ -107,7 +107,7 @@
         <div class="card-footer">
           <button type="submit" class="btn btn-primary mr-2">{{ isEditMode ? 'Update' : 'Add' }}</button>
           <button type="button" class="btn btn-primary mr-2" (click)="saveAndNew()">{{ isEditMode ? 'Update & New' : 'Add & New' }}</button>
-          <button type="button" class="btn btn-primary mr-2" (click)="saveAndDownload()">{{ isEditMode ? 'Update' : 'Add' }} <i class="fas fa-download"></i></button>
+          <button type="button" class="btn btn-success mr-2" (click)="saveAndDownload()">{{ isEditMode ? 'Update' : 'Add' }} & <i class="fa-brands fa-whatsapp"></i></button>
           <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
         </div>
       </form>

@@ -2,9 +2,11 @@ const FundTransaction = require("../models/FundTransaction");
 const queryHelper = require("../utils/queryHelper");
 const normalizePhone = require('../utils/commonUtils');
 const ejs = require("ejs");
+const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
 const numberToWords = require("number-to-words");
+const { uploadToS3 } = require('../utils/s3Uploader');
 
 exports.registerFund = async (req, res) => {
     try {
@@ -119,6 +121,7 @@ exports.deleteFund = async (req, res) => {
 exports.downloadReceipt = async (req, res) => {
     try {
         const { id } = req.params;
+        const action = req.query.action || 'download';
         const fund = await FundTransaction.findById(id).populate("houseId");
 
         if (!fund) {
@@ -148,12 +151,17 @@ exports.downloadReceipt = async (req, res) => {
 
         await browser.close();
 
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': `attachment; filename=receipt_${fund._id}.pdf`,
-        });
+        if (action === 'send') {
+            const s3Url = await uploadToS3(pdfBuffer, `receipt_${id}.pdf`);
+            return res.send({ url: s3Url });
+        } else {
+            res.set({
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': `attachment; filename=receipt_${fund._id}.pdf`,
+            });
 
-        res.send(pdfBuffer);
+            res.send(pdfBuffer);
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

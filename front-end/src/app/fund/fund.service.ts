@@ -61,9 +61,12 @@ export class FundService {
     });
   }
 
-  downloadReceipt(id: string) {
-    return this.http.get(`${this.baseUrl}/download/${id}`, {
-      headers: this.getHeaders(), responseType: 'blob',
+  downloadReceipt(id: string, action: 'download' | 'send' = 'download') {
+    const responseType = action === 'download' ? 'blob' : 'json';
+
+    return this.http.get(`${this.baseUrl}/download/${id}?action=${action}`, {
+      headers: this.getHeaders(),
+      responseType: responseType as 'blob'
     });
   }
 }

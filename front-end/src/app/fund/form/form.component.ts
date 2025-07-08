@@ -6,6 +6,8 @@ import { HouseService } from "../../house/house.service";
 import {triggerFileDownload} from "../../utils";
 import {NotificationService} from "../../services/notification.service";
 import {formatDate} from "@angular/common";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {ReceiptComponent} from "../../receipt/receipt/receipt.component";
 
 @Component({
   selector: 'app-form',
@@ -30,6 +32,7 @@ export class FormComponent implements OnInit {
     private fundService: FundService,
     private houseService: HouseService,
     private notification: NotificationService,
+    private modalService: NgbModal,
   ) {
     this.fundForm = this.fb.group({
       type: ['', Validators.required],
@@ -149,7 +152,8 @@ export class FormComponent implements OnInit {
   redirect(res) {
     this.fundId = res.data._id;
     if (this.isDownload) {
-      this.downloadReceipt(this.fundId);
+      // this.downloadReceipt(this.fundId);
+      this.openReceiptModal(res.data);
       if (!this.isEditMode) {
         this.router.navigate(['/fund/edit', this.fundId]);
       }
@@ -197,5 +201,28 @@ export class FormComponent implements OnInit {
     if (selectedHouse && selectedHouse.phone) {
       this.fundForm.patchValue({ alternativePhone: selectedHouse.phone });
     }
+  }
+
+  openReceiptModal(fund: any) {
+
+    let phoneNumbers: string[] = [];
+    if (fund.type === 'house') {
+      const house = fund.houseId;
+      const phone = house.phone?.trim();
+      const alternative = fund.alternativePhone?.trim();
+
+      if (phone && alternative && phone !== alternative) {
+        phoneNumbers = [phone, alternative];
+      } else if (phone || alternative) {
+        phoneNumbers = [phone || alternative].filter(Boolean);
+      }
+    } else {
+      const alternative = fund.alternativePhone?.trim();
+      phoneNumbers = [alternative].filter(Boolean);
+    }
+
+    const modalRef = this.modalService.open(ReceiptComponent, { size: 'md' });
+    modalRef.componentInstance.fundId = fund._id;
+    modalRef.componentInstance.phoneNumbers = phoneNumbers;
   }
 }

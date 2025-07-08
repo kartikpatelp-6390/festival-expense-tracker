@@ -3,6 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const protect = require("./middlewares/authMiddleware");
+const path = require("path");
+const fs = require("fs");
 
 dotenv.config();
 const app = express();
@@ -24,6 +26,7 @@ app.use("/api/reports", protect, require("./routes/reportRoutes"));
 
 app.use("/api/auth", require("./routes/authRoutes"));
 
+app.use('/receipts', express.static(path.join(__dirname, 'public/receipts')));
 
 app.get("/", (req, res) => {
     res.send("Festival Expense API is running");

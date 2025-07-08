@@ -87,7 +87,7 @@ export class ListComponent implements OnInit {
   }
 
   downloadReceipt(id: string) {
-    this.fundService.downloadReceipt(id).subscribe((blob)=>{
+    this.fundService.downloadReceipt(id, 'download').subscribe((blob)=>{
       triggerFileDownload(blob, `receipt_${id}.pdf`);
     });
   }
