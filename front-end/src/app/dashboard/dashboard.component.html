@@ -18,10 +18,10 @@
 
     <div class="small-box"
          [class.bg-info]="(box.type === 'fund')"
-         [class.bg-success]="(box.type === 'expense')"
-         [class.bg-primary]="(box.type === 'balance')"
+         [class.bg-danger]="(box.type === 'expense')"
+         [class.bg-success]="(box.type === 'balance')"
          [class.bg-warning]="(box.type === 'house')"
-         [class.bg-danger]="(box.type === 'volunteer')"
+         [class.bg-primary]="(box.type === 'volunteer')"
     >
       <div class="inner">
         <h3 *ngIf="(box.type === 'expense' || box.type === 'fund' || box.type === 'balance')">{{ box.value | currency:'INR':'symbol' }}</h3>

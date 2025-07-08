@@ -127,11 +127,11 @@
               <div class="d-flex align-items-center">
                 <button class="btn btn-sm btn-warning mr-2" (click)="editExpense(expense._id)"
                     [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === expense.volunteerId?._id))">
-                  Edit
+                  <i class="fas fa-pen-to-square"></i>
                 </button>
                 <button class="btn btn-sm btn-danger" (click)="deleteExpense(expense._id)"
                         [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === expense.volunteerId?._id))">
-                  Delete
+                  <i class="fas fa-trash-can"></i>
                 </button>
               </div>
             </td>
