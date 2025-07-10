@@ -17,6 +17,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use("/api/dashboard", protect, require("./routes/dashboardRoutes"));
 app.use("/api/house", protect, require("./routes/houseRoutes"));
 app.use("/api/festivals", protect, require("./routes/festovalRoutes"));
 app.use("/api/expenses", protect, require("./routes/expenseRoutes")); // TODO: Need to get make update

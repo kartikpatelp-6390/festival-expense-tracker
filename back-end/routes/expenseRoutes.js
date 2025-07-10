@@ -9,6 +9,7 @@ const {
     settleVolunteerExpenses,
     getCategories,
     getFestivalExpenseById,
+    getExpenseByVolunteer
 } = require("../controllers/expenseController");
 
 // POST /api/expenses — add expense
@@ -48,5 +49,8 @@ router.get("/", getFestivalExpense);
 
 // GET /api/expenses/summary?festivalId=...
 router.get("/summary", getSummary);
+
+// GET /api/expensed/volunteer/:id
+router.get("/volunteer/:id", getExpenseByVolunteer);
 
 module.exports = router;

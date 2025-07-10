@@ -24,6 +24,9 @@ export class DashboardComponent implements OnInit {
   recentExpenses: any[] = [];
   customSearch = {}
 
+  fundChartData: any;
+  expenseChartData: any;
+
   constructor(private dashboardService: DashboardService, private router: Router) {
     const startYear = 2024;
     const currentYear = new Date().getFullYear();
@@ -34,6 +37,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDashboardSummary();
+    this.loadBifurcation();
   }
 
   loadDashboardSummary() {
@@ -96,6 +100,37 @@ export class DashboardComponent implements OnInit {
       console.log(expensesData);
 
     });
+  }
+
+  loadBifurcation() {
+    this.customSearch = {'festivalYear': this.selectedYear};
+
+    this.dashboardService.getPaymentMethodBifurcation(this.customSearch).subscribe(res => {
+        const fundData = this.mapToDonut(res.fund);
+        const expenseData = this.mapToDonut(res.expense);
+
+      this.fundChartData = {
+        labels: fundData.labels,
+        datasets: [{
+          data: fundData.values,
+          backgroundColor: ['#4caf50', '#2196f3']
+        }]
+      };
+
+      this.expenseChartData = {
+        labels: expenseData.labels,
+        datasets: [{
+          data: expenseData.values,
+          backgroundColor: ['#f44336', '#ff9800']
+        }]
+      };
+    });
+  }
+
+  mapToDonut(data: any[]): { labels: string[], values: number[] } {
+    const labels = data.map(d => d._id);
+    const values = data.map(d => d.total);
+    return { labels, values };
   }
 
 }

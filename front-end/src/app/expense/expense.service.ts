@@ -72,4 +72,10 @@ export class ExpenseService {
       headers: this.getHeaders(),
     });
   }
+
+  getExpenseByVolunteerId(id: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/volunteer/${id}`, {
+      headers: this.getHeaders(),
+    })
+  }
 }

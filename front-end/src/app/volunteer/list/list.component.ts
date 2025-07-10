@@ -3,6 +3,7 @@ import { VolunteerService } from '../volunteer.service';
 import { Router } from '@angular/router';
 import {NotificationService} from "../../services/notification.service";
 import {AuthService} from "../../core/services/auth.service";
+import {ExpenseService} from "../../expense/expense.service";
 
 @Component({
   selector: 'app-volunteer-list',
@@ -17,12 +18,15 @@ export class ListComponent implements OnInit {
   search = '';
   role: string | null = '';
   user: any = null;
+  expanded: { [id: string]: boolean } = {};
+  volunteerExpenses: { [id: string]: any[] } = {};
 
   constructor(
     private volunteerService: VolunteerService,
     private router: Router,
     private notification: NotificationService,
     private authService: AuthService,
+    private expenseService: ExpenseService,
   ) { }
 
   ngOnInit(): void {
@@ -63,6 +67,27 @@ export class ListComponent implements OnInit {
         }
       })
     }
+  }
+
+  toggleExpenses(volunteerId: string) {
+    this.expanded[volunteerId] = !this.expanded[volunteerId];
+
+    if (this.expanded[volunteerId] && !this.volunteerExpenses[volunteerId]) {
+      this.expenseService.getExpenseByVolunteerId(volunteerId).subscribe((res) => {
+        this.volunteerExpenses[volunteerId] = res.data;
+      });
+    }
+  }
+
+  getTotalExpense(volunteerId: string): number {
+    const list = this.volunteerExpenses[volunteerId];
+    return list?.reduce((total, e) => total + e.amount, 0) || 0;
+  }
+
+  getTotalByMethod(volunteerId: string, method: 'Cash' | 'GPay'): number {
+    const list = this.volunteerExpenses[volunteerId];
+    return list?.filter(e => e.paymentMethod === method)
+      .reduce((sum, e) => sum + e.amount, 0) || 0;
   }
 
   protected readonly Math = Math;

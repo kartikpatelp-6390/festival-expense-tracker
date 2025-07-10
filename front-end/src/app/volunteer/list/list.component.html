@@ -31,7 +31,7 @@
       </div>
 
       <div class="card-body table-responsive">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
           <thead>
           <tr>
             <th>Name</th>
@@ -40,22 +40,74 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let volunteer of volunteers">
-            <td>{{ volunteer.name }}</td>
-            <td>{{ volunteer.phone }}</td>
-            <td>
-              <div class="d-flex align-items-center">
-                <button class="btn btn-sm btn-warning mr-2" (click)="editVolunteer(volunteer._id)"
-                  [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === volunteer._id))">
-                  <i class="fas fa-pen-to-square"></i>
-                </button>
-                <button class="btn btn-sm btn-danger" (click)="deleteVolunteer(volunteer._id)"
-                  [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === volunteer._id))">
-                  <i class="fas fa-trash-can"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
+            <ng-container *ngFor="let volunteer of volunteers">
+              <tr>
+                <td style="width: 48px;">
+                  <button class="btn btn-sm btn-light" (click)="toggleExpenses(volunteer._id)">
+                    <i class="fas" [ngClass]="expanded[volunteer._id] ? 'fa-minus' : 'fa-plus'" ></i>
+                  </button>
+                </td>
+                <td>{{ volunteer.name }}</td>
+                <td>{{ volunteer.phone }}</td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <button class="btn btn-sm btn-warning mr-2" (click)="editVolunteer(volunteer._id)"
+                            [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === volunteer._id))">
+                      <i class="fas fa-pen-to-square"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteVolunteer(volunteer._id)"
+                            [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === volunteer._id))">
+                      <i class="fas fa-trash-can"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr *ngIf="expanded[volunteer._id]">
+                <td colspan="4">
+                  <table class="table table-responsive table-striped mb-0">
+                    <thead>
+                      <tr>
+                        <th>Festival</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Payment</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let expense of volunteerExpenses[volunteer._id]">
+                        <td>{{ expense.festivalId?.name }}</td>
+                        <td>{{ expense.category }}</td>
+                        <td>{{ expense.amount | currency:'INR':'symbol' }}</td>
+                        <td class="text-center">
+                          <i *ngIf="expense.paymentMethod === 'Cash'" class="fas fa-money-bill-1-wave text-success fa-2x"
+                             title="Cash"></i>
+                          <i *ngIf="expense.paymentMethod === 'GPay'" class="fa-brands fa-google-pay text-primary fa-2x"
+                             title="Gpay"></i>
+                        </td>
+                        <td>{{ expense.date | date: "dd-MMM-yyyy" }}</td>
+                      </tr>
+                      <tr *ngIf="volunteerExpenses[volunteer._id]?.length === 0">
+                        <td colspan="5" class="text-center text-muted">No expenses found</td>
+                      </tr>
+                      <!-- Total footer -->
+                      <tr class="font-weight-bold bg-light" *ngIf="volunteerExpenses[volunteer._id]?.length">
+                        <td colspan="2">Total</td>
+                        <td colspan="3">
+                          {{ getTotalExpense(volunteer._id) | currency:'INR':'symbol' }}
+                          <span class="text-muted ml-2">
+                            (Cash: {{ getTotalByMethod(volunteer._id, 'Cash') | currency:'INR':'symbol' }},
+                             GPay: {{ getTotalByMethod(volunteer._id, 'GPay') | currency:'INR':'symbol' }})
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+
+            </ng-container>
           </tbody>
         </table>
       </div>

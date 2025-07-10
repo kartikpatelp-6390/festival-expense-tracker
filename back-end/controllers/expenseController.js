@@ -164,4 +164,15 @@ exports.getCategories = async (req, res) => {
     }
 }
 
+exports.getExpenseByVolunteer = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const expense = await Expense.find({ volunteerId: id })
+            .populate("festivalId").populate("volunteerId");
+        res.json({ success: true, data: expense });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 module.exports = exports;

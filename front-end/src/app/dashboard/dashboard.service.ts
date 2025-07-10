@@ -59,4 +59,18 @@ export class DashboardService {
       params, headers: this.getHeaders(),
     });
   }
+
+  getPaymentMethodBifurcation(customSearch = {}) {
+    let params = new HttpParams();
+
+    Object.entries(customSearch).forEach(([key, value]) => {
+      if(value !== null && value !== undefined && value !== '') {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return this.http.get<{ fund: any[], expense: any[] }>(`${this.baseUrl}/dashboard/paymentMethodBifurcation`, {
+      params, headers: this.getHeaders(),
+    });
+  }
 }
