@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {HomeComponent} from "./dashboard/home/home.component";
 import {MainLayoutComponent} from "./layout/main-layout/main-layout.component";
 import {AuthGuard} from "./core/guards/auth.guard";
-import {LoginComponent} from "./auth/login/login.component";
 import {RoleGuard} from "./core/guards/role.guard";
 
 const routes: Routes = [
@@ -17,7 +15,7 @@ const routes: Routes = [
         path: "dashboard",
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
         canActivate: [RoleGuard],
-        data: { roles: ['admin', 'volunteer'] }
+        data: { roles: ['admin', 'volunteer', 'non-admin'] }
       },
       {
         path: "house",

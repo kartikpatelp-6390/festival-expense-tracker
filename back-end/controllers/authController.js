@@ -32,10 +32,11 @@ exports.login = async (req, res) => {
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
-            const token = generateToken(user._id, "admin");
+            const adminRole = (username === "admin") ? "admin" : "non-admin";
+            const token = generateToken(user._id, adminRole);
             return res.json({
                 token,
-                role: "admin",
+                role: adminRole,
                 user: { id: user._id, name: user.username }
             });
         }

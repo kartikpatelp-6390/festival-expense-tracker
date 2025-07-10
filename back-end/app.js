@@ -24,8 +24,6 @@ app.use("/api/expenses", protect, require("./routes/expenseRoutes")); // TODO: N
 app.use("/api/funds", protect, require("./routes/fundRoutes")); // TODO: Need to make update API
 app.use("/api/volunteers", protect, require("./routes/volunteerRoutes")); // TODO: Need to make update and delete API
 app.use("/api/reports", protect, require("./routes/reportRoutes"));
-app.use('/r', require('./routes/shortlink'));
-
 
 app.use("/api/auth", require("./routes/authRoutes"));
 

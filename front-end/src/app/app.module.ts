@@ -50,6 +50,9 @@ import { ReceiptComponent } from './receipt/receipt/receipt.component';
     FormsModule,
   ],
   providers: [],
+  exports: [
+    CurrencyFormatPipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

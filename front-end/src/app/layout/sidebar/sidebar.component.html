@@ -14,7 +14,7 @@
           </a>
         </li>
         <!-- Start: House List -->
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="role !== 'non-admin'">
           <a routerLink="/house" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
              (click)="closeSidebar()">
             <i class="nav-icon fas fa-house"></i>
@@ -23,7 +23,7 @@
         </li>
         <!-- End: House List -->
         <!-- Start: Volunteer List -->
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="role !== 'non-admin'">
           <a routerLink="/volunteer" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
              (click)="closeSidebar()">
             <i class="nav-icon fas fa-users"></i>
@@ -32,7 +32,7 @@
         </li>
         <!-- End: Volunteer List -->
         <!-- Start: Festival List -->
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="role !== 'non-admin'">
           <a routerLink="/festival" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
              (click)="closeSidebar()">
             <i class="nav-icon fas fa-star"></i>
@@ -41,7 +41,7 @@
         </li>
         <!-- End: Festival List -->
         <!-- Start: Festival List -->
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="role !== 'non-admin'">
           <a routerLink="/fund" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
              (click)="closeSidebar()">
             <i class="nav-icon fas fa-indian-rupee-sign"></i>
@@ -50,7 +50,7 @@
         </li>
         <!-- End: Festival List -->
         <!-- Start: Expense List -->
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="role !== 'non-admin'">
           <a routerLink="/expense" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
              (click)="closeSidebar()">
             <i class="nav-icon fas fa-chart-column"></i>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {DashboardService} from "./dashboard.service";
 import {Observable, forkJoin} from "rxjs";
+import {AuthService} from "../core/services/auth.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +28,16 @@ export class DashboardComponent implements OnInit {
   fundChartData: any;
   expenseChartData: any;
 
-  constructor(private dashboardService: DashboardService, private router: Router) {
+  fundBifurcateData: Record<string, number>;
+  expenseBifurcateData: Record<string, number>;
+
+  role: string | null = '';
+
+  constructor(
+    private dashboardService: DashboardService,
+    private authService: AuthService,
+    private router: Router
+  ) {
     const startYear = 2024;
     const currentYear = new Date().getFullYear();
     for (let year = startYear; year <= currentYear + 5; year++) {
@@ -36,6 +46,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.role = this.authService.getRole();
     this.loadDashboardSummary();
     this.loadBifurcation();
   }
@@ -109,22 +120,17 @@ export class DashboardComponent implements OnInit {
         const fundData = this.mapToDonut(res.fund);
         const expenseData = this.mapToDonut(res.expense);
 
-      this.fundChartData = {
-        labels: fundData.labels,
-        datasets: [{
-          data: fundData.values,
-          backgroundColor: ['#4caf50', '#2196f3']
-        }]
-      };
-
-      this.expenseChartData = {
-        labels: expenseData.labels,
-        datasets: [{
-          data: expenseData.values,
-          backgroundColor: ['#f44336', '#ff9800']
-        }]
-      };
+        this.fundBifurcateData  = this.mapToObject(res.fund);
+        this.expenseBifurcateData = this.mapToObject(res.expense);
+        console.log(this.fundBifurcateData);
     });
+  }
+
+  mapToObject(data: any[]): { [key: string]: number } {
+    return data.reduce((acc, curr) => {
+      acc[curr._id] = curr.total;
+      return acc;
+    }, {});
   }
 
   mapToDonut(data: any[]): { labels: string[], values: number[] } {

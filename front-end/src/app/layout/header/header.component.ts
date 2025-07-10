@@ -7,10 +7,12 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  role: string | null = '';
 
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.role = this.authService.getRole();
   }
 
   logout() {

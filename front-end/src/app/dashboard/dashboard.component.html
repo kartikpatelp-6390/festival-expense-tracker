@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-3" xmlns="http://www.w3.org/1999/html">
   <h2>Dashboard</h2>
   <div>
     <select class="form-control" [(ngModel)]="selectedYear" (change)="loadDashboardSummary()">
@@ -28,6 +28,18 @@
         <h3 *ngIf="(box.type === 'house' || box.type === 'volunteer')">{{ box.value }}</h3>
 
         <p>{{ box.label }}</p>
+        <ng-container *ngIf="box.type === 'fund'">
+          <span *ngFor="let fundData of fundBifurcateData | keyvalue; let isLast = last">
+            <strong>{{ fundData.key }}:</strong> {{ fundData.value | currency:'INR':'symbol' }}
+            <span *ngIf="!isLast"> | </span>
+          </span>
+        </ng-container>
+        <ng-container *ngIf="box.type === 'expense'">
+          <span *ngFor="let expenseData of expenseBifurcateData | keyvalue; let isLast = last">
+            <strong>{{ expenseData.key }}:</strong> {{ expenseData.value | currency:'INR':'symbol' }}
+            <span *ngIf="!isLast"> | </span>
+          </span>
+        </ng-container>
       </div>
       <div class="icon">
         <i class="ion ion-bag"></i>
@@ -88,7 +100,7 @@
           <!-- /.table-responsive -->
         </div>
         <!-- /.card-body -->
-        <div class="card-footer clearfix">
+        <div class="card-footer clearfix" *ngIf="role !== 'non-admin'">
           <a href="javascript:void(0)" routerLink="/fund/add" class="btn btn-sm btn-info float-left">Add New Fund</a>
           <a href="javascript:void(0)" routerLink="/fund" class="btn btn-sm btn-secondary float-right">View All Funds</a>
         </div>
@@ -135,7 +147,7 @@
         <!-- /.table-responsive -->
       </div>
       <!-- /.card-body -->
-      <div class="card-footer clearfix">
+      <div class="card-footer clearfix" *ngIf="role !== 'non-admin'">
         <a href="javascript:void(0)" routerLink="/expense/add" class="btn btn-sm btn-info float-left">Add New Expense</a>
         <a href="javascript:void(0)" routerLink="/expense" class="btn btn-sm btn-secondary float-right">View All Expense</a>
       </div>
