@@ -42,7 +42,7 @@ exports.createHouse = async (req, res) => {
             const newHouse = new House({
                 houseNumber: normalizedHouseNumber,
                 ownerName,
-                finalPhone,
+                phone: finalPhone,
             });
 
             const savedHouse = await newHouse.save();
