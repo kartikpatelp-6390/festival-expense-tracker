@@ -38,7 +38,7 @@ export class ListComponent implements OnInit {
   loadVolunteers(){
     this.volunteerService.getVolunteers(this.page, this.limit, this.search).subscribe((res) => {
       this.volunteers = res['data'];
-      this.total = res['pagination'].total;
+      this.total = res['pagination'].totalPages;
     })
   }
 

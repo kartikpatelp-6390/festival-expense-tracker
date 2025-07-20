@@ -28,7 +28,7 @@ export class ListComponent implements OnInit {
   loadHouses(){
     this.houseService.getHouses(this.page, this.limit, this.search).subscribe((res) => {
       this.houses = res['data'];
-      this.total = res['pagination'].total;
+      this.total = res['pagination'].totalPages;
     })
   }
 

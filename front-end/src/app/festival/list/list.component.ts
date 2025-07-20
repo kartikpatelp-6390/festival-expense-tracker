@@ -47,7 +47,7 @@ export class ListComponent implements OnInit {
 
     this.festivalService.getFestivals(this.page, this.limit, this.search, '', this.customSearch).subscribe((res) => {
       this.festivals = res['data'];
-      this.total = res['pagination'].total;
+      this.total = res['pagination'].totalPages;
     })
   }
 

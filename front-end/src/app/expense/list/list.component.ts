@@ -71,7 +71,7 @@ export class ListComponent implements OnInit {
     console.log(this.customSearch);
     this.expenseService.getExpenses(this.page, this.limit, this.search, '', this.customSearch).subscribe((res) => {
       this.expenses = res['data'];
-      this.total = res['pagination'].total;
+      this.total = res['pagination'].totalPages;
     })
   }
 

@@ -12,6 +12,12 @@ const queryHelper = async (model, queryParams = {}, searchFields = [], populateO
     const queryObject = { ...queryParams };
     ['page', 'limit', 'sort', 'search'].forEach(param => delete queryObject[param]);
 
+    // Convert boolean-like strings to real booleans (e.g. isDone = "true")
+    Object.keys(queryObject).forEach((key) => {
+        if (queryObject[key] === 'true') queryObject[key] = true;
+        else if (queryObject[key] === 'false') queryObject[key] = false;
+    });
+
     // Apply search logic
     if (search && searchFields.length > 0) {
         queryObject.$or = searchFields.map(field => ({

@@ -5,6 +5,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { HomeComponent } from './home/home.component';
 import {FormsModule} from "@angular/forms";
+import { TodoModule } from "../todo/todo.module";
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import {FormsModule} from "@angular/forms";
   imports: [
     CommonModule,
     DashboardRoutingModule,
-    FormsModule
+    FormsModule,
+    TodoModule
   ]
 })
 export class DashboardModule { }

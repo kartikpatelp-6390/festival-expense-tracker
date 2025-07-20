@@ -55,7 +55,7 @@ export class ListComponent implements OnInit {
 
     this.fundService.getFunds(this.page, this.limit, this.search, '', this.customSearch).subscribe((res) => {
       this.funds = res['data'];
-      this.total = res['pagination'].total;
+      this.total = res['pagination'].totalPages;
     })
   }
 

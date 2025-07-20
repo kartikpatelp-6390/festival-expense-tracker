@@ -136,7 +136,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let expense of recentExpenses">
+            <tr *ngFor="let expense of recentExpenses"
+                [class.table-success]="(expense.isSettled)"
+                [class.table-danger]="(!expense.isSettled)">
               <td>{{ expense.category | titlecase }}</td>
               <td>{{ expense.amount | currency:'INR':'symbol' }}</td>
               <td>{{ expense.volunteerId?.name }}</td>
@@ -156,4 +158,8 @@
   </div>
   <!-- End: Expense -->
 
+</div>
+
+<div class="row">
+  <app-todo></app-todo>
 </div>
