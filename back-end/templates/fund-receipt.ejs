@@ -11,21 +11,33 @@
             width: 100%;
             max-width: 600px;
             margin: auto;
-            padding: 20px;
+            padding: 8px 10px;
             border: 1px solid #ddd;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 12px;
             text-align: center;
-            margin-bottom: 20px;
         }
-        .header img {
-            max-width: 100px;
-            margin-bottom: 10px;
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
         }
-        .header h1 {
-            margin: 5px 0;
-            font-size: 1.5em;
+        .header-inner img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+        }
+
+        .header-inner h1 {
+            margin: 0;
+            font-size: 2em;
             color: saddlebrown;
         }
         .header address, .header h3 {
@@ -34,6 +46,7 @@
         }
         .details {
             margin-bottom: 20px;
+            font-size: 0.85em;
         }
         .details .row {
             display: flex;
@@ -42,7 +55,7 @@
         }
         .details .row p {
             margin: 0;
-            font-size: 0.9em;
+            /*font-size: 0.85em;*/
         }
         .total {
             font-weight: bold;
@@ -60,13 +73,16 @@
 <body>
 <div class="receipt">
     <div class="header">
-        <h1>Shivam Yuvak Mandal</h1>
+        <div class="header-inner">
+            <img src="<%= imagePath %>" alt="Logo">
+            <h1>Shivam Yuvak Mandal</h1>
+        </div>
         <address>Shivam Duplex, Behind L&T Knowledge City, Waghodia Road, Ankhol, Vadodara</address>
         <h3>Festival Collection Receipt <%= fund.festivalYear %></h3>
     </div>
     <div class="details">
         <div class="row">
-            <p><strong>House Number:</strong> <%= fund.type === 'house' ? fund.houseId.houseNumber : fund.type %></p>
+            <p><strong><%= fund.type === 'house' ? 'House Number' : 'Type' %>:</strong> <%= fund.type === 'house' ? fund.houseId.houseNumber : fund.type.charAt(0).toUpperCase() + fund.type.slice(1) %></p>
             <p><strong>Date:</strong> <%= fund.formattedDate %></p>
         </div>
         <p><strong>Name:</strong> <%= fund.type === 'house' ? fund.name != '' ? fund.name : fund.houseId.ownerName : fund.name %></p>

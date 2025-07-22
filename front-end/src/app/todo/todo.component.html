@@ -1,0 +1,77 @@
+<div class="col-lg-7 connectedSortable">
+  <!-- TO DO List -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">
+        <i class="ion ion-clipboard mr-1"></i>
+        ToDo List
+      </h3>
+
+      <div class="card-tools">
+        <div class="d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between gap-3 mb-3">
+          <div class="d-flex align-items-center gap-2">
+            <label class="mb-0">
+              <select [(ngModel)]="todoFilter.isDone" (change)="loadTodos()">
+                <option value="">All</option>
+                <option value="false">Pending</option>
+                <option value="true">Completed</option>
+              </select>
+            </label>
+
+            <label class="mb-0">
+              <select [(ngModel)]="todoFilter.sortOrder" (change)="loadTodos()">
+                <option value="desc">Latest First</option>
+                <option value="asc">Oldest First</option>
+              </select>
+            </label>
+          </div>
+          <!-- Pagination -->
+          <div class="ms-auto">
+            <app-pagination
+              [totalPages]="total"
+              [currentPage]="page"
+              [limit]="limit"
+              (pageChanged)="changePage($event)">
+            </app-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <ul class="todo-list" data-widget="todo-list">
+        <li *ngFor="let todo of todos" [class.done]="todo.isDone">
+          <div class="icheck-primary d-inline ml-2">
+            <input type="checkbox" [id]="todo._id" [checked]="todo.isDone" (change)="toggleDone(todo)">
+            <label [for]="todo._id"></label>
+          </div>
+
+          <!-- Editing Mode -->
+          <div *ngIf="editTodoId === todo._id" class="d-inline-block w-50 ml-2">
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="editTitle">
+            <div class="mt-1">
+              <button class="btn btn-xs btn-success mr-2" (click)="saveEdit(todo)">Save</button>
+              <button class="btn btn-xs btn-secondary" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Normal Display -->
+          <span *ngIf="editTodoId !== todo._id" class="text" role="button" (click)="startEdit(todo)">
+            {{ todo.title }}
+          </span>
+
+          <i class="fas fa-trash-alt text-danger float-right ml-2" role="button" (click)="deleteTask(todo._id)" *ngIf="canDelete(todo)"></i>
+        </li>
+      </ul>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer clearfix">
+      <div *ngIf="role !== 'dashboard-only'" class="input-group mt-3">
+        <input type="text" class="form-control" [(ngModel)]="newTask" placeholder="New Task">
+        <div class="input-group-append">
+          <button class="btn btn-primary" (click)="addTask()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

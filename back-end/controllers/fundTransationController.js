@@ -138,9 +138,18 @@ exports.downloadReceipt = async (req, res) => {
             day: 'numeric'
         });
 
-        const templatePath = path.join(__dirname, "../templates/fund-receipt.ejs");
+        const templateDir = path.join(__dirname, "../templates");
+        const templatePath = path.join(templateDir, "fund-receipt.ejs");
 
-        const html = await ejs.renderFile(templatePath, { fund });
+        const logoPath = path.join(templateDir, 'logo.png');
+        const logoBuffer = fs.readFileSync(logoPath);
+        const base64Image = `data:image/png;base64,${logoBuffer.toString('base64')}`;
+
+        const footerLogoPath = path.join(templateDir, 'ram.png');
+        const footerLogoBuffer = fs.readFileSync(footerLogoPath);
+        const base64ImageFooter = `data:image/png;base64,${footerLogoBuffer.toString('base64')}`;
+
+        const html = await ejs.renderFile(templatePath, { fund, imagePath: base64Image, footerImagePath: base64ImageFooter });
 
         const browser = await puppeteer.launch({
             headless: true,
@@ -148,7 +157,7 @@ exports.downloadReceipt = async (req, res) => {
         });
         const page = await browser.newPage();
         await page.setContent(html);
-        const pdfBuffer = await page.pdf({ width: "175mm", height: "95mm" });
+        const pdfBuffer = await page.pdf({ width: "175mm", height: "100mm" });
 
         await browser.close();
 
