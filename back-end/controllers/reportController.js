@@ -117,4 +117,52 @@ exports.festivalBreakDownReport = async (req, res) => {
     }
 };
 
+exports.getIncomeExpenseReport = async (req, res) => {
+    try {
+        const { year } = req.query;
+        const festivalYear = year ? { festivalYear: Number(year) } : {};
+
+        // 1. Get cumulative income
+        const incomeAgg = await FundTransaction.aggregate([
+            ...(festivalYear ? [{ $match: festivalYear }] : []),
+            { $group: { _id: null, totalIncome: { $sum: '$amount' } } }
+        ]);
+        const totalIncome = incomeAgg[0]?.totalIncome || 0;
+
+        // 2. Get expenses with populated festival info
+        const expenses = await FestivalExpense.find(festivalYear)
+            .populate('festivalId', 'name');
+
+        // 3. Group expenses by festival
+        const groupedExpenses = {};
+        let totalExpense = 0;
+
+        expenses.forEach(exp => {
+            const festName = exp.festivalId?.name || 'Unknown';
+            if (!groupedExpenses[festName]) groupedExpenses[festName] = [];
+            groupedExpenses[festName].push({
+                title: exp.description,
+                amount: exp.amount
+            });
+            totalExpense += exp.amount;
+        });
+
+        // 4. Final balance
+        const balance = totalIncome - totalExpense;
+
+        // 5. Return structured response
+        res.json({
+            success: true,
+            data: {
+                income: totalIncome,
+                expenses: groupedExpenses,
+                totalExpense,
+                balance
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
 module.exports;
