@@ -11,9 +11,9 @@ import {AuthService} from "../core/services/auth.service";
 })
 export class DashboardComponent implements OnInit {
   infoBoxes = [
+    { label: 'Balance', type: 'balance', value: '0' },
     { label: 'Total Fund', type: 'fund', value: '0' },
     { label: 'Total Expense', type: 'expense', value: '0' },
-    { label: 'Balance', type: 'balance', value: '0' },
     { label: 'Houses', type: 'house', value: '0' },
     { label: 'Volunteers', type: 'volunteer', value: '0' }
   ];
@@ -24,6 +24,9 @@ export class DashboardComponent implements OnInit {
   recentFunds: any[] = [];
   recentExpenses: any[] = [];
   customSearch = {}
+
+  totalSettled: number = 0;
+  totalUnsettled: number = 0;
 
   fundChartData: any;
   expenseChartData: any;
@@ -69,6 +72,16 @@ export class DashboardComponent implements OnInit {
 
       totalFunds = fundsData.reduce((sum, item) => sum + item.amount, 0);
       totalExpenses = expensesData.reduce((sum, item) => sum + item.amount, 0);
+
+      // Total and bifurcated expenses
+      expensesData.forEach(item => {
+        if (item.isSettled) {
+          this.totalSettled += item.amount;
+        } else {
+          this.totalUnsettled += item.amount;
+        }
+      });
+
       totalBalances = totalFunds - totalExpenses;
 
       // get unit house number who funded

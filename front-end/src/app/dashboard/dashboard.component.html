@@ -39,6 +39,11 @@
             <strong>{{ expenseData.key }}:</strong> {{ expenseData.value | currency:'INR':'symbol' }}
             <span *ngIf="!isLast"> | </span>
           </span>
+          <br>
+          <span>
+            <strong>Settled:</strong> {{ totalSettled | currency:'INR':'symbol' }} |
+            <strong>Unsettled:</strong> {{ totalUnsettled | currency:'INR':'symbol' }}
+          </span>
         </ng-container>
       </div>
       <div class="icon">
