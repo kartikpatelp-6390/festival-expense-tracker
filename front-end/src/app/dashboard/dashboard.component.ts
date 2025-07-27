@@ -118,7 +118,7 @@ export class DashboardComponent implements OnInit {
       this.recentFunds = [...fundsData].splice(0, 10);
 
       // prepare recent expense data
-      this.recentExpenses = [...expensesData].splice(0, 10);
+      this.recentExpenses = [...expensesData].splice(0, 5);
 
       // create object of unique category and its total and pass to renderExpensePieChart
       console.log(expensesData);

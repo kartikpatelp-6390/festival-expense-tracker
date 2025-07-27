@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ExpenseService } from '../expense.service'
 import { VolunteerService } from "../../volunteer/volunteer.service";
 import { FestivalService } from "../../festival/festival.service";
@@ -68,7 +68,6 @@ export class ListComponent implements OnInit {
 
     (this.amount) ? this.customSearch['amount'] = this.amount : '';
 
-    console.log(this.customSearch);
     this.expenseService.getExpenses(this.page, this.limit, this.search, '', this.customSearch).subscribe((res) => {
       this.expenses = res['data'];
       this.total = res['pagination'].totalPages;

@@ -1,6 +1,9 @@
 // utils/queryHelper.js
 
 const queryHelper = async (model, queryParams = {}, searchFields = [], populateOptions = []) => {
+    const hasPagination =
+        Object.prototype.hasOwnProperty.call(queryParams, 'page') &&
+        Object.prototype.hasOwnProperty.call(queryParams, 'limit');
     const page = parseInt(queryParams.page) || 1;
     const limit = parseInt(queryParams.limit) || 10;
     const skip = (page - 1) * limit;
@@ -36,17 +39,29 @@ const queryHelper = async (model, queryParams = {}, searchFields = [], populateO
 
     // Apply sorting, pagination
     const total = await model.countDocuments(queryObject);
-    const data = await query.sort(sortBy).skip(skip).limit(limit).exec();
+    // Apply sorting
+    query = query.sort(sortBy);
 
-    return {
-        data,
-        pagination: {
+    // Apply pagination only if page & limit provided
+    if (hasPagination) {
+        query = query.skip(skip).limit(limit);
+    }
+
+    const data = await query.exec();
+
+    const response = { data };
+
+    // Include pagination metadata only if pagination is applied
+    if (hasPagination) {
+        response.pagination = {
             total,
             page,
             limit,
             totalPages: Math.ceil(total / limit)
-        }
-    };
+        };
+    }
+
+    return response;
 };
 
 module.exports = queryHelper;
