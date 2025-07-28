@@ -13,6 +13,7 @@ const expenseSchema = new mongoose.Schema({
         enum: ["Cash", "GPay"]
     },
     description: String,
+    note: String,
     date: { type: Date, default: Date.now },
     volunteerId: {
         type: mongoose.Schema.Types.ObjectId,

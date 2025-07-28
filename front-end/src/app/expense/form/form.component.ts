@@ -40,6 +40,7 @@ export class FormComponent implements OnInit {
       amount: ['', Validators.required],
       paymentMethod: ['Cash', Validators.required],
       description: ['', Validators.required],
+      note: [''],
       isSettled: [false],
       date: [new Date().toISOString().split('T')[0]] // default today
     });

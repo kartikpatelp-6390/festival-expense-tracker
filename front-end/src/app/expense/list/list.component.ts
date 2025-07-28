@@ -21,6 +21,7 @@ export class ListComponent implements OnInit {
   amount = '';
   volunteerId = '';
   festivalId = '';
+  selectedNote: string = '';
 
   total = 0;
   page = 1;
@@ -150,6 +151,10 @@ export class ListComponent implements OnInit {
 
   canToggle(expense: any) {
     return this.role === 'admin' || (this.role === 'volunteer' && this.user?.id === (expense.volunteerId?._id || expense.volunteerId));
+  }
+
+  setSelectedNote(note: string) {
+    this.selectedNote = note;
   }
 
 }

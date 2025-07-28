@@ -56,8 +56,10 @@
 
               <div class="form-group">
                 <label>Description</label>
-                <textarea class="form-control" formControlName="description" rows="3"
-                          [ngClass]="{'is-invalid': expenseForm.get('description')?.touched && expenseForm.get('description')?.invalid}"></textarea>
+                <input class="form-control" formControlName="description"
+                       [ngClass]="{'is-invalid': expenseForm.get('description')?.touched && expenseForm.get('description')?.invalid}">
+<!--                <textarea class="form-control" formControlName="description" rows="3"-->
+<!--                          [ngClass]="{'is-invalid': expenseForm.get('description')?.touched && expenseForm.get('description')?.invalid}"></textarea>-->
                 <small class="text-danger" *ngIf="expenseForm.get('description')?.touched && expenseForm.get('description')?.hasError('required')">
                   Description is required
                 </small>
@@ -88,6 +90,11 @@
               <div class="form-group">
                 <label>Date</label>
                 <input type="date" class="form-control" formControlName="date" />
+              </div>
+
+              <div class="form-group">
+                <label>Note</label>
+                <input class="form-control" formControlName="note">
               </div>
 
               <div class="form-group" *ngIf="isEditMode">

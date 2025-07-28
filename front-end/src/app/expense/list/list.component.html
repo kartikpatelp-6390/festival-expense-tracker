@@ -98,6 +98,16 @@
           <tr *ngFor="let expense of expenses">
             <td>
               {{ expense.description | titlecase }}
+
+              <i *ngIf="expense.note"
+                 class="fas fa-note-sticky text-warning ml-2"
+                 role="button"
+                 title="View Note"
+                 data-toggle="modal"
+                 data-target="#noteModal"
+                 (click)="setSelectedNote(expense.note)">
+              </i>
+
             </td>
             <td>{{ expense.category }}</td>
             <td>{{ expense.amount | currency:'INR':'symbol' }}</td>
@@ -151,5 +161,25 @@
       </div>
     </div>
     <!-- /.card -->
+  </div>
+</div>
+
+<!-- Note Modal -->
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="noteModalLabel">Expense Note</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{ selectedNote }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+      </div>
+    </div>
   </div>
 </div>

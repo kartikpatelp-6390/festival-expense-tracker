@@ -36,6 +36,8 @@ export class DashboardComponent implements OnInit {
 
   role: string | null = '';
 
+  selectedNote: string = '';
+
   constructor(
     private dashboardService: DashboardService,
     private authService: AuthService,
@@ -150,6 +152,10 @@ export class DashboardComponent implements OnInit {
     const labels = data.map(d => d._id);
     const values = data.map(d => d.total);
     return { labels, values };
+  }
+
+  setSelectedNote(note: string) {
+    this.selectedNote = note;
   }
 
 }
