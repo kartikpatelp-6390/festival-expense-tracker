@@ -1,0 +1,73 @@
+<h2>{{ isEditMode ? 'Edit Estimate' : 'Add Estimate' }}</h2>
+
+<div class="row">
+  <!-- left column -->
+  <div class="col-md-12">
+    <!-- general form elements -->
+    <div class="card card-primary">
+      <!-- /.card-header -->
+      <!-- form start -->
+      <form [formGroup]="estimateForm" (ngSubmit)="onSubmit()">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Festival</label>
+                <select class="form-control" formControlName="festivalId"
+                        [ngClass]="{'is-invalid': estimateForm.get('festivalId')?.touched && estimateForm.get('festivalId')?.invalid}">
+                  <option value="">Select Festival</option>
+                  <option *ngFor="let festival of festivals" [value]="festival._id">
+                    {{ festival.name }} ({{ festival.year }})
+                  </option>
+                </select>
+                <small class="text-danger" *ngIf="estimateForm.get('festivalId')?.touched && estimateForm.get('festivalId')?.hasError('required')">
+                  Festival is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Category</label>
+                <input class="form-control"
+                       formControlName="category"
+                       list="categorySuggestions"
+                       placeholder="Enter category"
+                       [ngClass]="{'is-invalid': estimateForm.get('category')?.touched && estimateForm.get('category')?.invalid}"/>
+                <datalist id="categorySuggestions">
+                  <option *ngFor="let category of categories" [value]="category"></option>
+                </datalist>
+                <small class="text-danger" *ngIf="estimateForm.get('category')?.touched && estimateForm.get('category')?.hasError('required')">
+                  Category is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Description</label>
+                <input class="form-control" formControlName="description"
+                       [ngClass]="{'is-invalid': estimateForm.get('description')?.touched && estimateForm.get('description')?.invalid}">
+                <small class="text-danger" *ngIf="estimateForm.get('description')?.touched && estimateForm.get('description')?.hasError('required')">
+                  Description is required
+                </small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Estimated Amount</label>
+                <input type="number" class="form-control" formControlName="estimatedAmount"
+                       [ngClass]="{'is-invalid': estimateForm.get('estimatedAmount')?.touched && estimateForm.get('estimatedAmount')?.invalid}"/>
+                <small class="text-danger" *ngIf="estimateForm.get('estimatedAmount')?.touched && estimateForm.get('estimatedAmount')?.hasError('required')">
+                  Estimated Amount is required
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary mr-2">{{ isEditMode ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

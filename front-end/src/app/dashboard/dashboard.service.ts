@@ -73,4 +73,18 @@ export class DashboardService {
       params, headers: this.getHeaders(),
     });
   }
+
+  getEstimate(customSearch = {}): Observable<any[]> {
+    let params = new HttpParams();
+
+    Object.entries(customSearch).forEach(([key, value]) => {
+      if(value !== null && value !== undefined && value !== '') {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return this.http.get<any[]>(`${this.baseUrl}/estimates`, {
+      params, headers: this.getHeaders(),
+    });
+  }
 }

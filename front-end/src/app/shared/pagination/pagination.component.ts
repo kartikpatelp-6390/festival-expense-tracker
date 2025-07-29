@@ -21,7 +21,6 @@ export class PaginationComponent {
     const maxVisible = 10;
     const pages: number[] = [];
 
-    console.log(this.totalPages);
     if (this.totalPages <= maxVisible) {
       // Show all pages if total pages are fewer than or equal to maxVisible
       for (let i = 1; i <= this.totalPages; i++) {

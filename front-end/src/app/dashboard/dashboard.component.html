@@ -1,6 +1,61 @@
-<div class="d-flex justify-content-between align-items-center mb-3" xmlns="http://www.w3.org/1999/html">
-  <h2>Dashboard</h2>
-  <div>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+
+  <!-- Left: Dashboard Title -->
+  <div class="order-1 order-md-1">
+    <h2 class="mb-0 text-center text-md-start">Dashboard</h2>
+  </div>
+
+  <!-- Middle: Progress Bar & Percent -->
+  <div class="order-3 order-md-2 w-100 w-md-50 mt-2 mt-md-0 px-1" style="max-width: 800px; margin: 0 auto;">
+    <!-- Visible Values -->
+    <div
+      class="d-flex justify-content-between align-items-center mb-2 flex-wrap"
+      style="font-size: clamp(0.85rem, 2.5vw, 1rem); font-weight: 600;"
+    >
+      <span class="text-start"
+            [ngClass]="{
+              'text-danger': totalBalance < 0,
+              'text-success': totalBalance >= totalEstimatedAmount
+            } ">
+        <strong>{{ totalBalance | currency:'INR':'symbol' }}</strong></span>
+      <span class="text-center mx-auto"><strong>{{ progressPercent | number:'1.0-2' }}%</strong></span>
+      <a [routerLink]="['/estimate']">
+        <span class="text-end"><strong>{{ totalEstimatedAmount | currency:'INR':'symbol' }}</strong></span>
+      </a>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress position-relative rounded-pill" style="height: 10px; background-color: #e9ecef;">
+      <div
+        class="progress-bar progress-bar-striped progress-bar-animated rounded-pill"
+        [ngClass]="{
+          'bg-success': progressPercent >= 75,
+          'bg-warning': progressPercent >= 50 && progressPercent < 75,
+          'bg-info': progressPercent < 50
+        }"
+        role="progressbar"
+        [style.width.%]="progressPercent"
+        [attr.aria-valuenow]="progressPercent"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      ></div>
+
+      <!-- Hidden Text (Accessibility Only) -->
+      <div
+        class="position-absolute top-0 bottom-0 start-0 end-0 d-flex justify-content-center align-items-center"
+        style="z-index: 2; pointer-events: none; opacity: 0;"
+      >
+        <div class="d-flex flex-wrap justify-content-center gap-2 w-100">
+          <span><strong>Balance:</strong> ₹{{ totalBalance | number }}</span>
+          <span><strong>{{ progressPercent | number:'1.0-2' }}%</strong></span>
+          <span><strong>Estimate:</strong> ₹{{ totalEstimatedAmount | number }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Year Dropdown -->
+  <div class="order-2 order-md-3">
     <select class="form-control" [(ngModel)]="selectedYear" (change)="loadDashboardSummary()">
       <option value="">All</option>
       <option *ngFor="let y of years" [value]="y">{{ y }}</option>

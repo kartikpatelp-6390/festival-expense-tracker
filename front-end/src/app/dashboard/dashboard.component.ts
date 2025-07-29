@@ -28,6 +28,9 @@ export class DashboardComponent implements OnInit {
   totalSettled: number = 0;
   totalUnsettled: number = 0;
 
+  totalBalance: number = 0;
+  totalEstimatedAmount: number = 0;
+
   fundChartData: any;
   expenseChartData: any;
 
@@ -37,6 +40,8 @@ export class DashboardComponent implements OnInit {
   role: string | null = '';
 
   selectedNote: string = '';
+
+  toastShown = false;
 
   constructor(
     private dashboardService: DashboardService,
@@ -60,20 +65,25 @@ export class DashboardComponent implements OnInit {
     let totalFunds: any = 0;
     let totalExpenses: any = 0;
     let totalBalances: any = 0;
+    let totalEstimated: any = 0;
 
     this.customSearch = {'festivalYear': this.selectedYear};
 
     const funds$ = this.dashboardService.getFunds(this.customSearch);
     const expenses$ = this.dashboardService.getExpense(this.customSearch);
     const volunteers$ = this.dashboardService.getVolunteer(this.customSearch);
+    const estimated$ = this.dashboardService.getEstimate(this.customSearch);
 
-    forkJoin([funds$, expenses$, volunteers$]).subscribe(([fundsRes, expenseRes, volunteerRes]) => {
+    forkJoin([funds$, expenses$, volunteers$, estimated$]).subscribe(([fundsRes, expenseRes, volunteerRes, estimateRes]) => {
       const fundsData = fundsRes['data'];
       const expensesData = expenseRes['data'];
       const volunteersData = volunteerRes['data'];
+      const estimateData = estimateRes['data'];
 
       totalFunds = fundsData.reduce((sum, item) => sum + item.amount, 0);
       totalExpenses = expensesData.reduce((sum, item) => sum + item.amount, 0);
+
+      this.totalEstimatedAmount = estimateData.reduce((sum, item) => sum + item.estimatedAmount, 0);
 
       // Total and bifurcated expenses
       expensesData.forEach(item => {
@@ -85,6 +95,7 @@ export class DashboardComponent implements OnInit {
       });
 
       totalBalances = totalFunds - totalExpenses;
+      this.totalBalance = totalBalances;
 
       // get unit house number who funded
       const uniqueHouseIds = new Set<String>();
@@ -121,10 +132,6 @@ export class DashboardComponent implements OnInit {
 
       // prepare recent expense data
       this.recentExpenses = [...expensesData].splice(0, 5);
-
-      // create object of unique category and its total and pass to renderExpensePieChart
-      console.log(expensesData);
-
     });
   }
 
@@ -156,6 +163,12 @@ export class DashboardComponent implements OnInit {
 
   setSelectedNote(note: string) {
     this.selectedNote = note;
+  }
+
+  get progressPercent(): number {
+    if (!this.totalEstimatedAmount || this.totalEstimatedAmount === 0) return 0;
+    const percent = (this.totalBalance / this.totalEstimatedAmount) * 100;
+    return Math.min(percent, 100); // Cap at 100%
   }
 
 }

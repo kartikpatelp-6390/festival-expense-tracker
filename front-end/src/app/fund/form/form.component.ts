@@ -59,43 +59,37 @@ export class FormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.houseService.getHouses(1,300).subscribe((res) => {
+    this.houseService.getHouses(1, 300).subscribe((res) => {
       this.houses = res['data'];
+
+      // Now that houses are loaded, handle edit logic
+      this.fundId = this.route.snapshot.params['id'];
+      if (this.fundId) {
+        this.isEditMode = true;
+        this.fundService.getFundById(this.fundId).subscribe(fund => {
+          const fundData = fund.data;
+          const formattedDate = fundData.date ? fundData.date.split('T')[0] : '';
+
+          this.fundForm.patchValue({
+            ...fundData,
+            houseId: fundData.houseId?._id || '',
+            date: formattedDate,
+          });
+
+          this.onHouseChange(fundData.houseId?._id || '');
+          this.updateValidators(fundData.type);
+        });
+      }
     });
 
+    // type and houseId change subscriptions
     this.fundForm.get('type')?.valueChanges.subscribe((value) => {
       this.updateValidators(value);
-    })
-
-    this.fundForm.get('houseId')?.valueChanges.subscribe(houseId => {
-      const selected = this.houses.find(h => h._id === houseId);
-      this.selectedHouseOwner = selected?.ownerName || '';
     });
 
-    this.fundId = this.route.snapshot.params['id'];
-    if(this.fundId) {
-      this.isEditMode = true;
-      this.fundService.getFundById(this.fundId).subscribe(fund => {
-        const fundData = fund.data;
-
-        // Format ISO date to yyyy-MM-dd
-        const formattedDate = fundData.date ? fundData.date.split('T')[0] : '';
-
-        this.fundForm.patchValue({
-          ...fundData,
-          houseId: fundData.houseId?._id || '', // extract _id for dropdown
-          date: formattedDate,
-        });
-
-        // Show owner name from populated object
-        this.selectedHouseOwner = fundData.houseId?.ownerName || '';
-
-        this.onTypeChange(this.fundForm.value.type);
-
-        // Trigger validators again if needed
-        this.updateValidators(fundData.type);
-      });
-    }
+    this.fundForm.get('houseId')?.valueChanges.subscribe(houseId => {
+      this.onHouseChange(houseId);
+    });
   }
 
   updateValidators(type: string) {
@@ -199,6 +193,7 @@ export class FormComponent implements OnInit {
   onHouseChange(houseId: string) {
     const selectedHouse = this.houses.find(h => h._id === houseId);
     if (selectedHouse && selectedHouse.phone) {
+      this.selectedHouseOwner = selectedHouse.ownerName;
       this.fundForm.patchValue({ alternativePhone: selectedHouse.phone });
     }
   }

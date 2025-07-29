@@ -1,0 +1,108 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Estimate List</h2>
+  <button class="btn btn-primary" (click)="addEstimate()">Add Estimate</button>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <!-- /.card-header -->
+      <div class="card-header">
+        <div class="card-tools">
+          <div class="d-flex flex-wrap align-items-center">
+
+            <!-- year filer -->
+            <div class="mr-3 mb-2">
+              <select class="form-control" [(ngModel)]="year" (change)="onYearChange()">
+                <option value="">All</option>
+                <option *ngFor="let year of years" value="{{ year }}"
+                        [selected]="(selectedYear == year)"
+                >{{ year }}
+                </option>
+              </select>
+            </div>
+
+            <!-- festival filer -->
+            <div class="mr-3 mb-2">
+              <select class="form-control" [(ngModel)]="festivalId" (change)="onFestivalChange()">
+                <option value="">All</option>
+                <option *ngFor="let festival of festivals" value="{{ festival._id }}"
+                        [selected]="(festival._id == festivalId)"
+                >{{ festival.name }} ({{ festival.year }})
+                </option>
+              </select>
+            </div>
+
+            <!-- search amount -->
+            <div class="mr-3 mb-2" style="width: 150px;">
+              <input type="text" name="table_search"
+                     class="form-control float-right" placeholder="Search amount"
+                     [(ngModel)]="amount" (ngModelChange)="loadEstimates()">
+            </div>
+
+            <!-- search text -->
+            <div class="mb-2">
+              <div class="input-group" style="width: 150px;">
+                <input type="text" name="table_search"
+                       class="form-control float-right" placeholder="Search"
+                       [(ngModel)]="search" (ngModelChange)="loadEstimates()">
+
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-default">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body table-responsive">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Festival</th>
+            <th>Amount</th>
+            <th style="width: 40px">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let estimate of estimates">
+            <td>{{ estimate.description | titlecase }}</td>
+            <td>{{ estimate.category }}</td>
+            <td>{{ estimate.festivalId.name }} ({{ estimate.festivalYear }})</td>
+            <td>{{ estimate.estimatedAmount | currency:'INR':'symbol' }}</td>
+            <td>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-warning mr-2" (click)="editEstimate(estimate._id)"
+                        [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === estimate.volunteerId?._id))">
+                  <i class="fas fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteExpense(estimate._id)"
+                        [disabled]="!(role === 'admin' || (role === 'volunteer' && user?.id === estimate.volunteerId?._id))">
+                  <i class="fas fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-footer clearfix">
+        <!-- Pagination -->
+        <app-pagination
+          [totalPages]="total"
+          [currentPage]="page"
+          [limit]="limit"
+          (pageChanged)="changePage($event)">
+        </app-pagination>
+      </div>
+    </div>
+    <!-- /.card -->
+  </div>
+</div>
