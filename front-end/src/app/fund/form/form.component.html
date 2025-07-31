@@ -1,4 +1,11 @@
 <h2>{{ isEditMode ? 'Edit Fund' : 'Add Fund' }}</h2>
+<img
+  src="/assets/GooglePay_QR.PNG"
+  alt="Google Pay QR"
+  class="img-fluid shadow mt-2 mb-3"
+  width="10%"
+  style="cursor: pointer;"
+  (click)="showLargeImage = true">
 
 <div class="row">
   <!-- left column -->
@@ -104,11 +111,25 @@
         </div>
         <!-- /.card-body -->
 
-        <div class="card-footer">
-          <button type="submit" class="btn btn-primary mr-2">{{ isEditMode ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn btn-primary mr-2" (click)="saveAndNew()">{{ isEditMode ? 'Update & New' : 'Add & New' }}</button>
-          <button type="button" class="btn btn-success mr-2" (click)="saveAndDownload()">{{ isEditMode ? 'Update' : 'Add' }} & <i class="fa-brands fa-whatsapp"></i></button>
+        <div class="card-footer d-flex flex-wrap gap-2">
+          <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-primary" (click)="saveAndNew()">{{ isEditMode ? 'Update & New' : 'Add & New' }}</button>
+          <button type="button" class="btn btn-success" (click)="saveAndDownload()">{{ isEditMode ? 'Update' : 'Add' }} & <i class="fa-brands fa-whatsapp"></i></button>
           <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        </div>
+
+        <!-- Modal for full-size image -->
+        <div
+          class="modal fade show"
+          tabindex="-1"
+          [ngClass]="{'d-block': showLargeImage}"
+          *ngIf="showLargeImage"
+          (click)="showLargeImage = false"
+          style="background: rgba(0,0,0,0.5); position: fixed; top:0; left:0; width:100%; height:100%; z-index:1050;">
+
+          <div class="d-flex justify-content-center align-items-center h-100">
+            <img src="/assets/GooglePay_QR.PNG" class="img-fluid" style="max-width: 90%; max-height: 90%;" />
+          </div>
         </div>
       </form>
     </div>

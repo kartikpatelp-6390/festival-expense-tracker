@@ -24,6 +24,7 @@ export class FormComponent implements OnInit {
   selectedYear:any = '';
   isDownload = false;
   isAddNew : boolean = false;
+  showLargeImage = false;
 
   constructor(
     private fb: FormBuilder,
@@ -60,7 +61,17 @@ export class FormComponent implements OnInit {
 
   ngOnInit(): void {
     this.houseService.getHouses(1, 300).subscribe((res) => {
-      this.houses = res['data'];
+      let houseData = res['data'];
+
+      this.houses = houseData.sort((a, b) => {
+        const [blockA, numA] = a.houseNumber.split("-");
+        const [blockB, numB] = b.houseNumber.split("-");
+
+        if (blockA < blockB) return -1;
+        if (blockA > blockB) return 1;
+
+        return parseInt(numA) - parseInt(numB);
+      });
 
       // Now that houses are loaded, handle edit logic
       this.fundId = this.route.snapshot.params['id'];

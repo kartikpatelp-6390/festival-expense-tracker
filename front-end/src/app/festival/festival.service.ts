@@ -37,6 +37,12 @@ export class FestivalService {
     });
   }
 
+  getAllFestivals(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/festivals`, {
+      headers: this.getHeaders(),
+    });
+  }
+
   getFestivalById(id: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/festivals/${id}`, {
       headers: this.getHeaders(),

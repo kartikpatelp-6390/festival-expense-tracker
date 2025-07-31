@@ -21,8 +21,14 @@ exports.createFestival = async (req, res) => {
 exports.getFestivalsByYear = async (req, res) => {
     try {
         req.query.year = req.query.year ? Number(req.query.year) : {};
+
+        const queryParams = {
+            ...req.query,
+            sort: '-year'
+        }
+
         const result = await queryHelper(
-            Festival, req.query, ["name"]
+            Festival, queryParams, ["name"]
         );
 
         res.json({ success: true, ...result });

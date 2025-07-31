@@ -64,7 +64,7 @@ export class FormComponent implements OnInit {
   }
 
   loadFestivals() {
-    this.festivalService.getFestivals().subscribe(res => {
+    this.festivalService.getAllFestivals().subscribe(res => {
       this.festivals = res['data'];
     });
   }
