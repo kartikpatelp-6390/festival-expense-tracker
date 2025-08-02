@@ -25,6 +25,9 @@ export class ListComponent implements OnInit {
   search = '';
   customSearch: any = {};
 
+  sortBy: string = 'createdAt';
+  sortOrder: 'asc' | 'desc' = 'desc';
+
   constructor(
     private fundService: FundService,
     private router: Router,
@@ -53,7 +56,9 @@ export class ListComponent implements OnInit {
 
     (this.amount) ? this.customSearch['amount'] = this.amount : '';
 
-    this.fundService.getFunds(this.page, this.limit, this.search, '', this.customSearch).subscribe((res) => {
+    const sortParam = this.sortOrder === 'asc' ? this.sortBy : `-${this.sortBy}`;
+
+    this.fundService.getFunds(this.page, this.limit, this.search, sortParam, this.customSearch).subscribe((res) => {
       this.funds = res['data'];
       this.total = res['pagination'].totalPages;
     })
@@ -113,6 +118,22 @@ export class ListComponent implements OnInit {
     const modalRef = this.modalService.open(ReceiptComponent, { size: 'md' });
     modalRef.componentInstance.fundId = fund._id;
     modalRef.componentInstance.phoneNumbers = phoneNumbers;
+  }
+
+  toggleSort(column: string) {
+    if (this.sortBy === column) {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = column;
+      this.sortOrder = 'asc'; // new column, start with ascending
+    }
+    this.loadFunds();
+  }
+
+  resetSort() {
+    this.sortBy = 'createdAt';
+    this.sortOrder = 'desc';
+    this.loadFunds();
   }
 
 }

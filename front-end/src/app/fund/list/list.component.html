@@ -11,6 +11,9 @@
         <div class="card-tools">
           <div class="d-flex flex-wrap align-items-center">
 
+            <div class="mr-3 mb-2 ml-auto">
+              <button class="btn btn-sm btn-outline-secondary" (click)="resetSort()">Reset Sort</button>
+            </div>
 
             <!-- year filer -->
             <div class="mr-3 mb-2">
@@ -55,7 +58,11 @@
           <tr>
             <th>Type</th>
             <th>Title/Name</th>
-            <th>Amount</th>
+            <th (click)="toggleSort('amount')" [class.text-primary]="sortBy === 'amount'" style="cursor: pointer;">
+              Amount
+              <i *ngIf="sortBy === 'amount' && sortOrder === 'asc'" class="fas fa-sort-up ml-1"></i>
+              <i *ngIf="sortBy === 'amount' && sortOrder === 'desc'" class="fas fa-sort-down ml-1"></i>
+            </th>
             <th>Festival Year</th>
             <th>Payment Method</th>
             <th>Reference</th>
@@ -78,7 +85,11 @@
               <i *ngIf="fund.paymentMethod === 'Cash'" class="fas fa-money-bill-1-wave text-success fa-2x" title="Cash"></i>
               <i *ngIf="fund.paymentMethod === 'GPay'" class="fa-brands fa-google-pay text-primary fa-2x" title="Gpay"></i>
             </td>
-            <td>{{ fund.reference }}</td>
+            <td>
+              <span class="d-inline-block text-truncate" style="max-width: 150px;" [attr.title]="fund.reference">
+                {{ fund.reference }}
+              </span>
+            </td>
             <td>
               <div class="d-flex align-items-center">
                 <button class="btn btn-sm btn-info mr-2" (click)="downloadReceipt(fund._id)">

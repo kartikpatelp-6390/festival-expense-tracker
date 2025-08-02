@@ -86,12 +86,16 @@
             <p><strong>Date:</strong> <%= fund.formattedDate %></p>
         </div>
         <p><strong>Name:</strong> <%= fund.type === 'house' ? fund.name != '' ? fund.name : fund.houseId.ownerName : fund.name %></p>
-        <p><strong>Amount:</strong> ₹ <%= fund.amount %>/-</p>
+        <p><strong>Amount:</strong> ₹<%= fund.amount %>/-</p>
         <p><strong>Amount in words:</strong> Rupees <%= fund.amountInWords %> Only</p>
         <p><strong>Payment Type:</strong> <%= fund.paymentMethod %></p>
     </div>
     <div class="footer-center">
-        <span style="font-size: 12px;">Thank you for contribution</span>
+        <span style="font-size: 12px;">Thank you for contribution</span><br/>
+        <span style="font-size: 9px;">
+        Design & Developed by
+        <a href="https://kplab.dev" target="_blank">kplab.dev</a>
+        </span>
     </div>
 </div>
 </body>

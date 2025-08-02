@@ -157,7 +157,7 @@ exports.downloadReceipt = async (req, res) => {
         });
         const page = await browser.newPage();
         await page.setContent(html);
-        const pdfBuffer = await page.pdf({ width: "175mm", height: "100mm" });
+        const pdfBuffer = await page.pdf({ width: "175mm", height: "105mm" });
 
         await browser.close();
 

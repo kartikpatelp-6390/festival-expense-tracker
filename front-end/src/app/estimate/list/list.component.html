@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h2>Estimate List</h2>
-  <button class="btn btn-primary" (click)="addEstimate()">Add Estimate</button>
+  <button class="btn btn-primary" (click)="addEstimate()" *ngIf="role === 'admin'">Add Estimate</button>
 </div>
 
 <div class="row">

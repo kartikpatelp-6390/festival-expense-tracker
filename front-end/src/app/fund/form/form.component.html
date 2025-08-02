@@ -1,11 +1,15 @@
-<h2>{{ isEditMode ? 'Edit Fund' : 'Add Fund' }}</h2>
-<img
-  src="/assets/GooglePay_QR.PNG"
-  alt="Google Pay QR"
-  class="img-fluid shadow mt-2 mb-3"
-  width="10%"
-  style="cursor: pointer;"
-  (click)="showLargeImage = true">
+<div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+  <h2 class="mb-0 me-3">{{ isEditMode ? 'Edit Fund' : 'Add Fund' }}</h2>
+
+  <!-- Small QR image -->
+  <img
+    src="/assets/GooglePay_QR.PNG"
+    alt="Google Pay QR"
+    class="img-fluid shadow"
+    width="50"
+    style="cursor: pointer;"
+    (click)="showLargeImage = true">
+</div>
 
 <div class="row">
   <!-- left column -->

@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit {
       });
 
       // prepare recent fund data
-      this.recentFunds = [...fundsData].splice(0, 10);
+      this.recentFunds = [...fundsData].splice(0, 5);
 
       // prepare recent expense data
       this.recentExpenses = [...expensesData].splice(0, 5);
