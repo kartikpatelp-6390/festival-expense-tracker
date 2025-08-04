@@ -239,6 +239,44 @@ exports.getUnregisteredHouses = async (req, res) => {
     }
 };
 
+exports.getSummaryByVolunteers = async (req, res) => {
+    try {
+        const { festivalYear } = req.query;
+
+        const summary = await FundTransaction.aggregate([
+            { $match: { festivalYear: parseInt(festivalYear) } },
+            {
+                $group: {
+                    _id: "$volunteerId",
+                    totalAmount: { $sum: "$amount" },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "volunteers",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "volunteer"
+                }
+            },
+            { $unwind: "$volunteer" },
+            {
+                $project: {
+                    volunteerName: "$volunteer.name",
+                    totalAmount: 1,
+                    count: 1
+                }
+            },
+            { $sort: { volunteerName: 1 } }
+        ]);
+
+        res.json(summary);
+    } catch (error) {
+        res.status(500).json({ error: "Something went wrong", details: error });
+    }
+}
+
 function toTitleCase(str) {
     return str
         .split(' ')

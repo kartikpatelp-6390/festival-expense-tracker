@@ -8,6 +8,7 @@ import { ReceiptComponent } from "../../receipt/receipt/receipt.component";
 import {HouseService} from "../../house/house.service";
 import {VolunteerService} from "../../volunteer/volunteer.service";
 import { UnpaidListComponent } from "../unpaid-list/unpaid-list.component";
+import { VolunteerSummaryComponent } from "../volunteer-summary/volunteer-summary.component";
 
 @Component({
   selector: 'app-fund-list',
@@ -34,6 +35,8 @@ export class ListComponent implements OnInit {
   volunteerId = '';
   startDate: string = '';
   endDate: string = '';
+
+  volunteerSummary: any[] = [];
 
   constructor(
     private fundService: FundService,
@@ -187,6 +190,19 @@ export class ListComponent implements OnInit {
       modalRef.componentInstance.houses = res['sortedHouses'];
     }, err => {
       this.notification.error("Failed to fetch unpaid houses.");
+    });
+  }
+
+  openVolunteerSummary() {
+    const params = {
+      festivalYear: this.year
+    };
+
+    this.fundService.getVolunteerSummary(params).subscribe((res) => {
+      const modalRef = this.modalService.open(VolunteerSummaryComponent, { size: 'md' });
+      modalRef.componentInstance.summary = res;
+    }, err => {
+      this.notification.error("Failed to fetch volunteer summary.");
     });
   }
 

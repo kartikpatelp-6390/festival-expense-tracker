@@ -83,4 +83,18 @@ export class FundService {
       params, headers: this.getHeaders(),
     });
   }
+
+  getVolunteerSummary(customSearch = {}): Observable<any[]> {
+    let params = new HttpParams();
+
+    Object.entries(customSearch).forEach(([key, value]) => {
+      if(value !== null && value !== undefined && value !== '') {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return this.http.get<any[]>(`${this.baseUrl}/summary-by-volunteers`, {
+      params, headers: this.getHeaders(),
+    });
+  }
 }

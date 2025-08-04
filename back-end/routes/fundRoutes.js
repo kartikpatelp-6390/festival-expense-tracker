@@ -9,6 +9,7 @@ const {
     deleteFund,
     downloadReceipt,
     getUnregisteredHouses,
+    getSummaryByVolunteers,
 } = require("../controllers/fundTransationController");
 
 // POST /api/funds — Add a new fund entry
@@ -16,6 +17,9 @@ router.post("/", registerFund);
 
 // Get /api/funds/update?festivalYear=2025
 router.get('/unpaid', getUnregisteredHouses)
+
+// GET /api/funds/summary-by-volunteers?festivalYear=2025 — income grouped by type
+router.get("/summary-by-volunteers", getSummaryByVolunteers);
 
 // GET /api/funds/:id
 router.get("/:id", getFund);
