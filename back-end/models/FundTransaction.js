@@ -23,6 +23,11 @@ const fundTransactionSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now },
     festivalYear: { type: Number, required: true },
     alternativePhone: { type: String },
+    volunteerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Volunteer",
+        required: false
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model("FundTransaction", fundTransactionSchema);

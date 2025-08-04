@@ -8,10 +8,14 @@ const {
     updateFund,
     deleteFund,
     downloadReceipt,
+    getUnregisteredHouses,
 } = require("../controllers/fundTransationController");
 
 // POST /api/funds — Add a new fund entry
 router.post("/", registerFund);
+
+// Get /api/funds/update?festivalYear=2025
+router.get('/unpaid', getUnregisteredHouses)
 
 // GET /api/funds/:id
 router.get("/:id", getFund);
@@ -30,5 +34,7 @@ router.delete("/:id", deleteFund);
 
 // GET /api/funds/download/:id/receipt - downloadReceipt
 router.get("/download/:id", downloadReceipt);
+
+
 
 module.exports = router;

@@ -7,10 +7,11 @@ import { ListComponent } from './list/list.component';
 import { FormComponent } from './form/form.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../shared/shared.module";
+import { UnpaidListComponent } from './unpaid-list/unpaid-list.component';
 
 
 @NgModule({
-  declarations: [FundComponent, ListComponent, FormComponent],
+  declarations: [FundComponent, ListComponent, FormComponent, UnpaidListComponent],
   imports: [
     CommonModule,
     FundRoutingModule,

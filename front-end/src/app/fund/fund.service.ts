@@ -69,4 +69,18 @@ export class FundService {
       responseType: responseType as 'blob'
     });
   }
+
+  getUnpaidHouse(customSearch = {}): Observable<any[]> {
+    let params = new HttpParams();
+
+    Object.entries(customSearch).forEach(([key, value]) => {
+      if(value !== null && value !== undefined && value !== '') {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return this.http.get<any[]>(`${this.baseUrl}/unpaid`, {
+      params, headers: this.getHeaders(),
+    });
+  }
 }

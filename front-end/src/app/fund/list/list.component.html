@@ -1,6 +1,9 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h2>Fund List</h2>
-  <button class="btn btn-primary" (click)="addFund()">Add Fund</button>
+  <div class="ms-auto d-flex gap-2">
+    <button class="btn btn-default" (click)="unPaidList()">Unpaid List</button>
+    <button class="btn btn-primary" (click)="addFund()">Add Fund</button>
+  </div>
 </div>
 
 <div class="row">
@@ -22,6 +25,17 @@
                 <option *ngFor="let year of years" value="{{ year }}"
                         [selected]="(selectedYear == year)"
                 >{{ year }}
+                </option>
+              </select>
+            </div>
+
+            <!-- volunteer filer -->
+            <div class="mr-3 mb-2">
+              <select class="form-control" [(ngModel)]="volunteerId" (change)="loadFunds()">
+                <option value="">All</option>
+                <option *ngFor="let volunteer of volunteers" value="{{ volunteer._id }}"
+                        [selected]="(volunteer._id == volunteerId)"
+                >{{ volunteer.name }}
                 </option>
               </select>
             </div>
@@ -48,6 +62,34 @@
               </div>
             </div>
 
+          </div>
+          <!-- Second Row for Dates -->
+          <div class="d-flex flex-wrap align-items-center mt-2">
+            <!-- Start Date -->
+            <div class="mr-3 mb-2">
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="startDate"
+                (change)="onStartDateChange()"
+                placeholder="Start Date">
+            </div>
+
+            <!-- End Date -->
+            <div class="mr-3 mb-2">
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="endDate"
+                [min]="startDate"
+                [disabled]="!startDate"
+                (change)="loadFunds()"
+                placeholder="End Date">
+            </div>
+
+            <div class="mr-3 mb-2">
+              <button class="btn btn-sm btn-outline-danger" (click)="clearDates()">Clear Dates</button>
+            </div>
           </div>
         </div>
       </div>

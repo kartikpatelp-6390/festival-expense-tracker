@@ -1,4 +1,5 @@
 const FundTransaction = require("../models/FundTransaction");
+const House = require("../models/House");
 const queryHelper = require("../utils/queryHelper");
 const normalizePhone = require('../utils/commonUtils');
 const ejs = require("ejs");
@@ -45,8 +46,16 @@ exports.updateFund = async (req, res) => {
             alternativePhone: finalPhone,
         }
 
+        // If volunteerId is empty, remove it from the record
+        if (req.body.volunteerId === '') {
+            formData.volunteerId = null;
+        }
+
         const fund = await FundTransaction.findByIdAndUpdate(id, formData, { new: true });
-        const populated = await fund.populate("houseId");
+        const populatedFund = await fund.populate([
+            { path: "houseId" },
+            { path: "volunteerId" }
+        ]);
         res.status(201).json({ message: "Fund updated", data: fund });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -56,7 +65,7 @@ exports.updateFund = async (req, res) => {
 exports.getFund = async (req, res) => {
     try {
         const { id } = req.params;
-        const fund = await FundTransaction.findById(id, req.body, { new: true }).populate("houseId");
+        const fund = await FundTransaction.findById(id, req.body, { new: true }).populate("houseId").populate("volunteerId");
         res.json({ message: "Fund detail", data: fund });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -66,11 +75,26 @@ exports.getFund = async (req, res) => {
 exports.listFunds = async (req, res) => {
     try {
         let searchFields = ["name", "reference"]; // fields to search by text
-        const populateOptions = ["houseId"];
+        const populateOptions = ["houseId", "volunteerId"];
 
-        req.query.festivalYear = req.query.festivalYear ? Number(req.query.festivalYear) : {};
+        // Destructure to exclude startDate and endDate
+        const { startDate, endDate, ...queryWithoutDates } = req.query;
+
+        const filters = { ...queryWithoutDates };
+
+        if (filters.festivalYear) {
+            filters.festivalYear = Number(filters.festivalYear);
+        }
+
+        // 🎯 Date range filter (only on date field, not timestamps)
+        if (startDate || endDate) {
+            filters.date = {};
+            if (startDate) filters.date.$gte = new Date(`${startDate}T00:00:00Z`);
+            if (endDate) filters.date.$lte = new Date(`${endDate}T23:59:59Z`);
+        }
+
         const result = await queryHelper(
-            FundTransaction, req.query, searchFields, populateOptions
+            FundTransaction, filters, searchFields, populateOptions
         );
 
         // Post-process each fund record
@@ -175,6 +199,41 @@ exports.downloadReceipt = async (req, res) => {
 
             res.send(pdfBuffer);
         }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getUnregisteredHouses = async (req, res) => {
+    try {
+        const { festivalYear } = req.query;
+
+        if (!festivalYear) {
+            return res.status(400).json({ error: "festivalYear is required" });
+        }
+
+        const registeredHouseIds = await FundTransaction.distinct("houseId", {
+            type: "house",
+            festivalYear: parseInt(festivalYear),
+        });
+
+        const houses = await House.find({
+            _id: { $nin: registeredHouseIds },
+        });
+
+        // Natural alphanumeric sort by houseNumber
+        const sortedHouses = houses.sort((a, b) => {
+            const regex = /^([A-Za-z]+)-?(\d+)?$/;
+            const [, letterA = "", numA = "0"] = a.houseNumber.match(regex) || [];
+            const [, letterB = "", numB = "0"] = b.houseNumber.match(regex) || [];
+
+            const letterCompare = letterA.localeCompare(letterB);
+            if (letterCompare !== 0) return letterCompare;
+
+            return parseInt(numA) - parseInt(numB);
+        });
+
+        res.json({ success: true, sortedHouses });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

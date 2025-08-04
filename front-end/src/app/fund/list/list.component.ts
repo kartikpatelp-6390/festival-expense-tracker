@@ -6,6 +6,8 @@ import {NotificationService} from "../../services/notification.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReceiptComponent } from "../../receipt/receipt/receipt.component";
 import {HouseService} from "../../house/house.service";
+import {VolunteerService} from "../../volunteer/volunteer.service";
+import { UnpaidListComponent } from "../unpaid-list/unpaid-list.component";
 
 @Component({
   selector: 'app-fund-list',
@@ -28,12 +30,18 @@ export class ListComponent implements OnInit {
   sortBy: string = 'createdAt';
   sortOrder: 'asc' | 'desc' = 'desc';
 
+  volunteers: any[] = [];
+  volunteerId = '';
+  startDate: string = '';
+  endDate: string = '';
+
   constructor(
     private fundService: FundService,
     private router: Router,
     private notification: NotificationService,
     private modalService: NgbModal,
     private houseService: HouseService,
+    private volunteerService: VolunteerService,
   ) {
     const startYear = 2024;
     const currentYear = new Date().getFullYear();
@@ -49,14 +57,26 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFunds();
+    this.loadVolunteers();
   }
 
   loadFunds(){
-    this.customSearch = {'festivalYear': this.year};
+    this.customSearch = {
+      'festivalYear': this.year,
+      'volunteerId': this.volunteerId,
+    };
 
     (this.amount) ? this.customSearch['amount'] = this.amount : '';
 
     const sortParam = this.sortOrder === 'asc' ? this.sortBy : `-${this.sortBy}`;
+
+    if (this.startDate) {
+      this.customSearch['startDate'] = this.startDate;
+    }
+
+    if (this.endDate) {
+      this.customSearch['endDate'] = this.endDate;
+    }
 
     this.fundService.getFunds(this.page, this.limit, this.search, sortParam, this.customSearch).subscribe((res) => {
       this.funds = res['data'];
@@ -134,6 +154,40 @@ export class ListComponent implements OnInit {
     this.sortBy = 'createdAt';
     this.sortOrder = 'desc';
     this.loadFunds();
+  }
+
+  loadVolunteers() {
+    this.volunteerService.getAllVolunteers().subscribe((res) => {
+      this.volunteers = res['data'];
+    })
+  }
+
+  onStartDateChange() {
+    // Reset end date if it becomes invalid
+    if (this.endDate && this.endDate < this.startDate) {
+      this.endDate = '';
+    }
+
+    this.loadFunds();
+  }
+
+  clearDates() {
+    this.startDate = '';
+    this.endDate = '';
+    this.loadFunds();
+  }
+
+  unPaidList() {
+    const params = {
+      festivalYear: this.year
+    };
+
+    this.fundService.getUnpaidHouse(params).subscribe((res) => {
+      const modalRef = this.modalService.open(UnpaidListComponent, { size: 'xl' });
+      modalRef.componentInstance.houses = res['sortedHouses'];
+    }, err => {
+      this.notification.error("Failed to fetch unpaid houses.");
+    });
   }
 
 }

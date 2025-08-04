@@ -88,7 +88,7 @@ export class FormComponent implements OnInit {
   }
 
   loadVolunteers() {
-    this.volunteerService.getVolunteers().subscribe(res => {
+    this.volunteerService.getAllVolunteers().subscribe(res => {
       this.volunteers = res['data'];
     });
   }

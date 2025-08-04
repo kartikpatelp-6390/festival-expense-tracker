@@ -8,6 +8,7 @@ import {NotificationService} from "../../services/notification.service";
 import {formatDate} from "@angular/common";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {ReceiptComponent} from "../../receipt/receipt/receipt.component";
+import {VolunteerService} from "../../volunteer/volunteer.service";
 
 @Component({
   selector: 'app-form',
@@ -25,6 +26,7 @@ export class FormComponent implements OnInit {
   isDownload = false;
   isAddNew : boolean = false;
   showLargeImage = false;
+  volunteers: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -32,6 +34,7 @@ export class FormComponent implements OnInit {
     private router: Router,
     private fundService: FundService,
     private houseService: HouseService,
+    private volunteerService: VolunteerService,
     private notification: NotificationService,
     private modalService: NgbModal,
   ) {
@@ -45,6 +48,7 @@ export class FormComponent implements OnInit {
       date: [new Date().toISOString().split('T')[0]],
       festivalYear: [new Date().getFullYear()],
       alternativePhone: [''],
+      volunteerId: [''],
     })
 
     const startYear = 2024;
@@ -60,6 +64,8 @@ export class FormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadVolunteers();
+
     this.houseService.getHouses(1, 300).subscribe((res) => {
       let houseData = res['data'];
 
@@ -84,6 +90,7 @@ export class FormComponent implements OnInit {
           this.fundForm.patchValue({
             ...fundData,
             houseId: fundData.houseId?._id || '',
+            volunteerId: fundData.volunteerId?._id || '',
             date: formattedDate,
           });
 
@@ -230,5 +237,11 @@ export class FormComponent implements OnInit {
     const modalRef = this.modalService.open(ReceiptComponent, { size: 'md' });
     modalRef.componentInstance.fundId = fund._id;
     modalRef.componentInstance.phoneNumbers = phoneNumbers;
+  }
+
+  loadVolunteers() {
+    this.volunteerService.getAllVolunteers().subscribe(res => {
+      this.volunteers = res['data'];
+    });
   }
 }

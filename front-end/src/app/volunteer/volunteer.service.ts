@@ -31,6 +31,12 @@ export class VolunteerService {
     });
   }
 
+  getAllVolunteers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/volunteers`, {
+      headers: this.getHeaders(),
+    });
+  }
+
   getVolunteerById(id: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/volunteers/${id}`, {
       headers: this.getHeaders(),

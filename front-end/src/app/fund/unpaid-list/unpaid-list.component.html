@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <h5 class="modal-title">Unpaid Houses</h5>
+  <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <thead class="thead-dark">
+    <tr>
+      <th>#</th>
+      <th>House Number</th>
+      <th>Owner Name</th>
+      <th>Phone</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let house of houses; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ house.houseNumber }}</td>
+      <td>{{ house.ownerName }}</td>
+      <td>{{ house.phone }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="houses.length === 0" class="text-center text-muted">
+    No unpaid houses found.
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Close</button>
+</div>
