@@ -1,0 +1,109 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Inventory List</h2>
+  <button class="btn btn-primary" (click)="addInventory()">Add Inventory</button>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <!-- /.card-header -->
+      <div class="card-header">
+        <div class="card-tools">
+          <div class="d-flex flex-wrap align-items-center">
+
+            <!-- search text -->
+            <div class="mb-2">
+              <div class="input-group" style="width: 150px;">
+                <input type="text" name="table_search"
+                       class="form-control float-right" placeholder="Search"
+                       [(ngModel)]="search" (ngModelChange)="loadInventories()">
+
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-default">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body table-responsive">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Item</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Place</th>
+            <th style="width: 40px">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let inventory of inventories">
+            <td>
+              {{ inventory.item | titlecase }}
+
+              <i *ngIf="inventory.note"
+                 class="fas fa-note-sticky text-warning ml-2"
+                 role="button"
+                 title="View Note"
+                 data-toggle="modal"
+                 data-target="#noteModal"
+                 (click)="setSelectedNote(inventory.note)">
+              </i>
+
+            </td>
+            <td>{{ inventory.category }}</td>
+            <td>{{ inventory.count }}</td>
+            <td>{{ inventory.place }}</td>
+            <td>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-warning mr-2" (click)="editInventory(inventory._id)">
+                  <i class="fas fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteInventory(inventory._id)">
+                  <i class="fas fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-footer clearfix">
+        <!-- Pagination -->
+        <app-pagination
+          [totalPages]="total"
+          [currentPage]="page"
+          [limit]="limit"
+          (pageChanged)="changePage($event)">
+        </app-pagination>
+      </div>
+    </div>
+    <!-- /.card -->
+  </div>
+</div>
+
+<!-- Note Modal -->
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="noteModalLabel">Expense Note</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{ selectedNote }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

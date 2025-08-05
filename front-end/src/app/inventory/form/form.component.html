@@ -1,0 +1,82 @@
+<h2>{{ isEditMode ? 'Edit Inventory' : 'Add Inventory' }}</h2>
+
+<div class="row">
+  <!-- left column -->
+  <div class="col-md-12">
+    <!-- general form elements -->
+    <div class="card card-primary">
+      <!-- /.card-header -->
+      <!-- form start -->
+      <form [formGroup]="inventoryForm" (ngSubmit)="onSubmit()">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+
+              <div class="form-group">
+                <label>Item</label>
+                <input type="text" class="form-control" formControlName="item"
+                       [ngClass]="{'is-invalid': inventoryForm.get('item')?.touched && inventoryForm.get('item')?.invalid}"/>
+                <small class="text-danger" *ngIf="inventoryForm.get('item')?.touched && inventoryForm.get('item')?.hasError('required')">
+                  Item is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Category</label>
+                <input class="form-control"
+                       formControlName="category"
+                       list="categorySuggestions"
+                       placeholder="Enter category"
+                       [ngClass]="{'is-invalid': inventoryForm.get('category')?.touched && inventoryForm.get('category')?.invalid}"/>
+                <datalist id="categorySuggestions">
+                  <option *ngFor="let category of categories" [value]="category"></option>
+                </datalist>
+                <small class="text-danger" *ngIf="inventoryForm.get('category')?.touched && inventoryForm.get('category')?.hasError('required')">
+                  Category is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Note</label>
+                <input class="form-control" formControlName="note">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Quantity</label>
+                <input type="number" class="form-control" formControlName="count"
+                       [ngClass]="{'is-invalid': inventoryForm.get('count')?.touched && inventoryForm.get('count')?.invalid}"/>
+                <small class="text-danger" *ngIf="inventoryForm.get('count')?.touched && inventoryForm.get('count')?.hasError('required')">
+                  Quantity is required
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label>Place</label>
+                <select class="form-control" formControlName="place"
+                        [ngClass]="{'is-invalid': inventoryForm.get('place')?.touched && inventoryForm.get('place')?.invalid}">
+                  <option value=""></option>
+                  <option value="Club House">Club House</option>
+                  <option value="Shed">Shed</option>
+                  <option value="Pump House">Pump House</option>
+                  <option value="Security Cabin">Security Cabin</option>
+                  <option value="Volunteer">Volunteer</option>
+                </select>
+                <small class="text-danger" *ngIf="inventoryForm.get('paymentMethod')?.touched && inventoryForm.get('paymentMethod')?.hasError('required')">
+                  Place is required
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer d-flex flex-wrap gap-2">
+          <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -26,6 +26,7 @@ app.use("/api/funds", protect, require("./routes/fundRoutes")); // TODO: Need to
 app.use("/api/volunteers", protect, require("./routes/volunteerRoutes")); // TODO: Need to make update and delete API
 app.use("/api/reports", protect, require("./routes/reportRoutes"));
 app.use("/api/todos", protect, require("./routes/todoRoutes"));
+app.use("/api/inventory", protect, require("./routes/inventoryRoutes"));
 
 app.use("/api/auth", require("./routes/authRoutes"));
 

@@ -67,6 +67,15 @@
           </a>
         </li>
         <!-- End: Expense List -->
+        <!-- Start: Inventory List -->
+        <li class="nav-item" *ngIf="role !== 'non-admin'">
+          <a routerLink="/inventory" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
+             (click)="closeSidebar()">
+            <i class="nav-icon fas fa-warehouse"></i>
+            <p>Inventory</p>
+          </a>
+        </li>
+        <!-- End: Inventory List -->
         <!-- Start: Report List -->
         <li class="nav-item" *ngIf="role !== 'non-admin'">
           <a routerLink="/report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link"
