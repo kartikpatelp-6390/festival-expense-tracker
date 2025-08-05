@@ -259,9 +259,16 @@ exports.getUnregisteredHouses = async (req, res) => {
 exports.getSummaryByVolunteers = async (req, res) => {
     try {
         const { festivalYear } = req.query;
+        const parsedYear = parseInt(festivalYear);
 
-        const summary = await FundTransaction.aggregate([
-            { $match: { festivalYear: parseInt(festivalYear) } },
+        // Volunteer-based collection (exclude Cash)
+        const volunteers = await FundTransaction.aggregate([
+            {
+                $match: {
+                    festivalYear: parsedYear,
+                    volunteerId: { $ne: null }  // only entries linked to volunteers
+                }
+            },
             {
                 $group: {
                     _id: "$volunteerId",
@@ -280,6 +287,7 @@ exports.getSummaryByVolunteers = async (req, res) => {
             { $unwind: "$volunteer" },
             {
                 $project: {
+                    _id: 1,
                     volunteerName: "$volunteer.name",
                     totalAmount: 1,
                     count: 1
@@ -288,7 +296,40 @@ exports.getSummaryByVolunteers = async (req, res) => {
             { $sort: { volunteerName: 1 } }
         ]);
 
-        res.json(summary);
+        // Cash collection (not linked to volunteers)
+        const cashResult = await FundTransaction.aggregate([
+            {
+                $match: {
+                    festivalYear: parsedYear,
+                    paymentMethod: "Cash",
+                    $or: [
+                        { volunteerId: null },
+                        { volunteerId: { $exists: false } }
+                    ]
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: "$amount" },
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        const cash = cashResult.length > 0
+            ? {
+                volunteerName: "Cash",
+                totalAmount: cashResult[0].totalAmount,
+                count: cashResult[0].count
+            }
+            : {
+                volunteerName: "Cash",
+                totalAmount: 0,
+                count: 0
+            };
+
+        res.json({ volunteers, cash });
     } catch (error) {
         res.status(500).json({ error: "Something went wrong", details: error });
     }

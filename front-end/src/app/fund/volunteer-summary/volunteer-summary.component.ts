@@ -7,8 +7,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./volunteer-summary.component.scss']
 })
 export class VolunteerSummaryComponent implements OnInit {
-  @Input() summary: any[] = [];
-  totalAmount: number = 0;
+  @Input() summary: { volunteers: any[]; cash: any } = { volunteers: [], cash: { totalAmount: 0, count: 0 } };
+  totalVolunteerAmount: number = 0;
+  grandTotalAmount: number = 0;
 
   constructor(
     public activeModal: NgbActiveModal
@@ -19,7 +20,8 @@ export class VolunteerSummaryComponent implements OnInit {
   }
 
   calculateTotalAmount(): void {
-    this.totalAmount = this.summary.reduce((sum, v) => sum + v.totalAmount, 0);
+    this.totalVolunteerAmount = this.summary.volunteers.reduce((sum, v) => sum + v.totalAmount, 0);
+    this.grandTotalAmount = this.totalVolunteerAmount + (this.summary.cash?.totalAmount || 0);
   }
 
 }

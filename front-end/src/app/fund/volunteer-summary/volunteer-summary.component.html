@@ -16,27 +16,45 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let v of summary; let i = index">
-              <td>{{ i + 1 }}</td>
-              <td>{{ v.volunteerName }}</td>
-              <td>{{ v.totalAmount | currency:'INR':'symbol' }}</td>
-            </tr>
-            <tr *ngIf="summary.length === 0">
-              <td colspan="3" class="text-center">No records found</td>
-            </tr>
-            </tbody>
-            <tfoot *ngIf="summary.length > 0">
+              <!-- Volunteer Section -->
               <tr>
-                <td colspan="2" class="text-end fw-bold">Total</td>
-                <td class="fw-bold">
-                  {{ totalAmount | currency:'INR':'symbol' }}
-                </td>
+                <th colspan="2" class="table-secondary">Volunteer Contributions</th>
+                <th class="text-end table-secondary">
+                  {{ totalVolunteerAmount | currency: 'INR':'symbol' }}
+                </th>
               </tr>
-            </tfoot>
+              <tr *ngFor="let v of summary.volunteers; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ v.volunteerName }}</td>
+                <td>{{ v.totalAmount | currency: 'INR':'symbol' }}</td>
+              </tr>
+              <tr *ngIf="summary.volunteers.length === 0">
+                <td colspan="2" class="text-center">No volunteer records found</td>
+                <th class="text-end">
+                  {{ summary.cash.totalAmount | currency: 'INR':'symbol' }}
+                </th>
+              </tr>
+
+              <!-- Cash Section -->
+              <tr class="table-secondary">
+                <th colspan="3">Cash Contributions</th>
+              </tr>
+              <tr *ngIf="summary.cash?.totalAmount > 0">
+                <td>1</td>
+                <td>{{ summary.cash.volunteerName }}</td>
+                <td>{{ summary.cash.totalAmount | currency: 'INR':'symbol' }}</td>
+              </tr>
+              <tr *ngIf="summary.cash?.totalAmount === 0">
+                <td colspan="3" class="text-center">No cash records found</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer d-flex justify-content-between">
+        <div>
+          <strong>Grand Total: {{ grandTotalAmount | currency:'INR':'symbol' }}</strong>
+        </div>
         <button class="btn btn-secondary" (click)="activeModal.close()">Close</button>
       </div>
     </div>
