@@ -108,7 +108,7 @@
               <i *ngIf="sortBy === 'amount' && sortOrder === 'asc'" class="fas fa-sort-up ml-1"></i>
               <i *ngIf="sortBy === 'amount' && sortOrder === 'desc'" class="fas fa-sort-down ml-1"></i>
             </th>
-            <th>Festival Year</th>
+            <th>Paid To</th>
             <th>Payment Method</th>
             <th>Reference</th>
             <th style="width: 40px">Action</th>
@@ -125,7 +125,7 @@
             <td>{{ fund.name }}</td>
             <td>{{ fund.amount | currency:'INR':'symbol' }}</td>
 
-            <td>{{ fund.festivalYear }}</td>
+            <td>{{ fund.volunteerId?.name }}</td>
             <td>
               <i *ngIf="fund.paymentMethod === 'Cash'" class="fas fa-money-bill-1-wave text-success fa-2x" title="Cash"></i>
               <i *ngIf="fund.paymentMethod === 'GPay'" class="fa-brands fa-google-pay text-primary fa-2x" title="Gpay"></i>

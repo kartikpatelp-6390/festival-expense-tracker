@@ -9,6 +9,7 @@ import {formatDate} from "@angular/common";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {ReceiptComponent} from "../../receipt/receipt/receipt.component";
 import {VolunteerService} from "../../volunteer/volunteer.service";
+import {UnpaidListComponent} from "../unpaid-list/unpaid-list.component";
 
 @Component({
   selector: 'app-form',
@@ -66,37 +67,25 @@ export class FormComponent implements OnInit {
   ngOnInit(): void {
     this.loadVolunteers();
 
+    this.fundId = this.route.snapshot.params['id'];
+    this.isEditMode = !!this.fundId;
+
     this.houseService.getHouses(1, 300).subscribe((res) => {
       let houseData = res['data'];
 
-      this.houses = houseData.sort((a, b) => {
-        const [blockA, numA] = a.houseNumber.split("-");
-        const [blockB, numB] = b.houseNumber.split("-");
+      if (!this.isEditMode) {
+        this.fundService.getUnpaidHouse({festivalYear: this.selectedYear}).subscribe((res) => {
+          const sortedHouses = res['sortedHouses'];
 
-        if (blockA < blockB) return -1;
-        if (blockA > blockB) return 1;
+          // Extract only the _id values from the house objects
+          const unpaidHouseIds = sortedHouses.map(h => h._id);
 
-        return parseInt(numA) - parseInt(numB);
-      });
-
-      // Now that houses are loaded, handle edit logic
-      this.fundId = this.route.snapshot.params['id'];
-      if (this.fundId) {
-        this.isEditMode = true;
-        this.fundService.getFundById(this.fundId).subscribe(fund => {
-          const fundData = fund.data;
-          const formattedDate = fundData.date ? fundData.date.split('T')[0] : '';
-
-          this.fundForm.patchValue({
-            ...fundData,
-            houseId: fundData.houseId?._id || '',
-            volunteerId: fundData.volunteerId?._id || '',
-            date: formattedDate,
-          });
-
-          this.onHouseChange(fundData.houseId?._id || '');
-          this.updateValidators(fundData.type);
+          houseData = houseData.filter(h => unpaidHouseIds.includes(h._id));
+          this.setHouses(houseData);
         });
+      } else {
+        this.setHouses(houseData); // show all houses in edit mode
+        this.loadFundData();       // load fund details
       }
     });
 
@@ -107,6 +96,35 @@ export class FormComponent implements OnInit {
 
     this.fundForm.get('houseId')?.valueChanges.subscribe(houseId => {
       this.onHouseChange(houseId);
+    });
+  }
+
+  setHouses(houseData: any[]) {
+    this.houses = houseData.sort((a, b) => {
+      const [blockA, numA] = a.houseNumber.split("-");
+      const [blockB, numB] = b.houseNumber.split("-");
+
+      if (blockA < blockB) return -1;
+      if (blockA > blockB) return 1;
+
+      return parseInt(numA) - parseInt(numB);
+    });
+  }
+
+  loadFundData() {
+    this.fundService.getFundById(this.fundId).subscribe(fund => {
+      const fundData = fund.data;
+      const formattedDate = fundData.date ? fundData.date.split('T')[0] : '';
+
+      this.fundForm.patchValue({
+        ...fundData,
+        houseId: fundData.houseId?._id || '',
+        volunteerId: fundData.volunteerId?._id || '',
+        date: formattedDate,
+      });
+
+      this.onHouseChange(fundData.houseId?._id || '');
+      this.updateValidators(fundData.type);
     });
   }
 

@@ -18,7 +18,24 @@ exports.registerFund = async (req, res) => {
             return res.status(400).json({ error: "houseId is required for type 'house'" });
         }
 
-        const fund = await FundTransaction.create(data);
+        let finalPhone = '';
+        if (req.body.type === "house" && req.body.houseId) {
+            finalPhone = normalizePhone(req.body.alternativePhone);
+        } else {
+            delete req.body.alternativePhone;
+        }
+
+        const formData = {
+            ...req.body,
+            alternativePhone: finalPhone,
+        }
+
+        // If volunteerId is empty, remove it from the record
+        if (req.body.volunteerId === '') {
+            formData.volunteerId = null;
+        }
+
+        const fund = await FundTransaction.create(formData);
         const populated = await fund.populate("houseId");
         res.status(201).json({ message: "Fund saved", data: populated });
     } catch (err) {
