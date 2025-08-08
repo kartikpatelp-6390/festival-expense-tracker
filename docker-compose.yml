@@ -7,7 +7,6 @@ services:
       - "3000:3000"
     env_file:
       - ./back-end/.env
-    network_mode: host
     restart: unless-stopped
 
 #  frontend:
