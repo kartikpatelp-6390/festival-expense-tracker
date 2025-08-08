@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Income & Expense Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h3 { text-align: center; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f4f4f4; }
+        .text-right { text-align: right; }
+        .text-success { color: green; }
+        .text-danger { color: red; }
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .logo-text {
+            font-size: 30px;
+            font-weight: bold;
+            color: darkred;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 16px;
+            font-style: italic;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="header-container">
+    <img src="<%= imagePath %>" alt="Logo" height="60"/>
+    <span class="logo-text">Shivam Yuvak Mandal</span>
+</div>
+<h3>Festival Income & Expense Report - <%= reportData.year %></h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th class="text-right">Income</th>
+        <th class="text-right">Expense</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><strong>Total Income</strong></td>
+        <td class="text-right">₹<%= reportData.income.toLocaleString() %></td>
+        <td></td>
+    </tr>
+
+    <% Object.keys(reportData.expenses).forEach(fest => { %>
+        <tr>
+            <td><strong><%= fest %></strong></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <% reportData.expenses[fest].forEach(exp => { %>
+            <tr>
+                <td class="text-right"><%= exp.title %></td>
+                <td></td>
+                <td class="text-right">₹<%= exp.amount.toLocaleString() %></td>
+            </tr>
+        <% }) %>
+        <tr><td colspan="3"></td></tr>
+    <% }) %>
+
+    <tr>
+        <td><strong>Total</strong></td>
+        <td class="text-right"><strong>₹<%= reportData.income.toLocaleString() %></strong></td>
+        <td class="text-right"><strong>₹<%= reportData.totalExpense.toLocaleString() %></strong></td>
+    </tr>
+    <tr>
+        <td><strong>Balance</strong></td>
+        <td></td>
+        <td class="text-right <%= reportData.balance >= 0 ? 'text-success' : 'text-danger' %>">
+            <strong>₹<%= reportData.balance.toLocaleString() %></strong>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="footer">
+    Thank you for your generous contribution and valuable support towards our festival
+</div>
+</body>
+</html>

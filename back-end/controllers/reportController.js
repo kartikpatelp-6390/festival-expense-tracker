@@ -5,6 +5,11 @@ const FundTransaction = require("../models/FundTransaction");
 const Festival = require("../models/Festival");
 const FestivalExpense = require("../models/Expense");
 
+const ejs = require("ejs");
+const fs = require("fs");
+const path = require("path");
+const puppeteer = require("puppeteer");
+
 exports.getYearlyReport = async (req, res) => {
     const { year } = req.query;
     if (!year) return res.status(400).json({ error: "year is required" });
@@ -162,6 +167,77 @@ exports.getIncomeExpenseReport = async (req, res) => {
         });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+exports.downloadIncomeExpenseReport = async (req, res) => {
+    try {
+        const { year } = req.query;
+        const festivalYear = year ? { festivalYear: Number(year) } : {};
+
+        // Reuse logic from getIncomeExpenseReport
+        const incomeAgg = await FundTransaction.aggregate([
+            ...(festivalYear ? [{ $match: festivalYear }] : []),
+            { $group: { _id: null, totalIncome: { $sum: '$amount' } } }
+        ]);
+        const totalIncome = incomeAgg[0]?.totalIncome || 0;
+
+        const expenses = await FestivalExpense.find(festivalYear)
+            .populate('festivalId', 'name');
+
+        const groupedExpenses = {};
+        let totalExpense = 0;
+        expenses.forEach(exp => {
+            const festName = exp.festivalId?.name || 'Unknown';
+            if (!groupedExpenses[festName]) groupedExpenses[festName] = [];
+            groupedExpenses[festName].push({
+                title: exp.description,
+                amount: exp.amount
+            });
+            totalExpense += exp.amount;
+        });
+
+        const balance = totalIncome - totalExpense;
+
+        const reportData = {
+            year: year || new Date().getFullYear(),
+            income: totalIncome,
+            expenses: groupedExpenses,
+            totalExpense,
+            balance
+        };
+
+        // Load logo images
+        const templateDir = path.join(__dirname, "../templates");
+        const logoPath = path.join(templateDir, 'logo.png');
+        const logoBuffer = fs.readFileSync(logoPath);
+        const base64Image = `data:image/png;base64,${logoBuffer.toString('base64')}`;
+
+        const html = await ejs.renderFile(
+            path.join(templateDir, "income-expense-report.ejs"),
+            { reportData, imagePath: base64Image }
+        );
+
+        // Generate PDF
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+        const page = await browser.newPage();
+        await page.setContent(html, { waitUntil: 'networkidle0' });
+        const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+
+        await browser.close();
+
+        // Send PDF
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename=income_expense_report_${reportData.year}.pdf`,
+        });
+        res.send(pdfBuffer);
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 };
 

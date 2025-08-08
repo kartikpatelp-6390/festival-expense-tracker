@@ -23,12 +23,15 @@
             </div>
 
             <!-- Download buttons -->
-            <div class="ml-auto d-flex gap-2">
-              <button class="btn btn-outline-success btn-sm">
-                <i class="fa fa-file-excel"></i> Download Excel
-              </button>
-              <button class="btn btn-outline-danger btn-sm">
-                <i class="fa fa-file-pdf"></i> Download PDF
+            <div class="ml-auto d-flex">
+              <button class="btn btn-outline-danger btn-sm" (click)="downloadReceipt()">
+                <ng-container *ngIf="!downloading">
+                  <i class="fa fa-file-pdf"></i> Download PDF
+                </ng-container>
+                <ng-container *ngIf="downloading">
+                  <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+                  Downloading...
+                </ng-container>
               </button>
             </div>
 

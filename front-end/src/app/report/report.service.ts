@@ -31,4 +31,22 @@ export class ReportService {
       params, headers: this.getHeaders(),
     })
   }
+
+  downloadReport(customSearch: {}, action: 'download' | 'send' = 'download') {
+    const responseType = action === 'download' ? 'blob' : 'json';
+
+    let params = new HttpParams();
+
+    Object.entries(customSearch).forEach(([key, value]) => {
+      if(value !== null && value !== undefined && value !== '') {
+        params = params.set(key, String(value));
+      }
+    });
+
+    return this.http.get(`${this.baseUrl}/reports/download-report`, {
+      params,
+      headers: this.getHeaders(),
+      responseType: responseType as 'blob'
+    });
+  }
 }

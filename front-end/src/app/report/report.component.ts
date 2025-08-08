@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReportService } from "./report.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../core/services/auth.service";
+import {triggerFileDownload} from "../utils";
 
 @Component({
   selector: 'app-report',
@@ -16,6 +17,7 @@ export class ReportComponent implements OnInit {
   year:any = '';
 
   customSearch = {}
+  downloading = false;
 
   constructor(
     private reportService: ReportService,
@@ -53,6 +55,20 @@ export class ReportComponent implements OnInit {
 
   getFestivalKeys(obj: any): string[] {
     return Object.keys(obj);
+  }
+
+  downloadReceipt() {
+    this.downloading = true; // start loading state
+    this.customSearch = {'year': this.year};
+    this.reportService.downloadReport(this.customSearch, 'download').subscribe({
+      next: (blob) => {
+        triggerFileDownload(blob, `festival_income_expense_report_${this.year}.pdf`);
+        this.downloading = false; // stop loading
+      },
+        error: () => {
+        this.downloading = false; // stop loading even on error
+      }
+    });
   }
 
 }
