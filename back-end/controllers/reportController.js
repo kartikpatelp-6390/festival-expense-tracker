@@ -134,6 +134,27 @@ exports.getIncomeExpenseReport = async (req, res) => {
         ]);
         const totalIncome = incomeAgg[0]?.totalIncome || 0;
 
+        // 2. Get income grouped by type
+        const incomeByType = await FundTransaction.aggregate([
+            ...(festivalYear ? [{ $match: festivalYear }] : []),
+            {
+                $group: {
+                    _id: '$type',
+                    total: { $sum: '$amount' },
+                }
+            }
+        ]);
+
+        const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+
+        const incomeGroup = {};
+        incomeByType.forEach(i => {
+            const typeName = i._id === 'balance' ? 'Previous Balance' : capitalize(i._id) || 'Unknown';
+            incomeGroup[typeName] = {
+                total: i.total,
+            };
+        });
+
         // 2. Get expenses with populated festival info
         const expenses = await FestivalExpense.find(festivalYear)
             .populate('festivalId', 'name');
@@ -181,6 +202,7 @@ exports.getIncomeExpenseReport = async (req, res) => {
             success: true,
             data: {
                 income: totalIncome,
+                incomeGroup,
                 expenses: groupedExpenses,
                 totalExpense,
                 balance
@@ -202,6 +224,27 @@ exports.downloadIncomeExpenseReport = async (req, res) => {
             { $group: { _id: null, totalIncome: { $sum: '$amount' } } }
         ]);
         const totalIncome = incomeAgg[0]?.totalIncome || 0;
+
+        // 2. Get income grouped by type
+        const incomeByType = await FundTransaction.aggregate([
+            ...(festivalYear ? [{ $match: festivalYear }] : []),
+            {
+                $group: {
+                    _id: '$type',
+                    total: { $sum: '$amount' },
+                }
+            }
+        ]);
+
+        const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+
+        const incomeGroup = {};
+        incomeByType.forEach(i => {
+            const typeName = i._id === 'balance' ? 'Previous Balance' : capitalize(i._id) || 'Unknown';
+            incomeGroup[typeName] = {
+                total: i.total,
+            };
+        });
 
         const expenses = await FestivalExpense.find(festivalYear)
             .populate('festivalId', 'name');
@@ -254,6 +297,7 @@ exports.downloadIncomeExpenseReport = async (req, res) => {
         const reportData = {
             year: year || new Date().getFullYear(),
             income: totalIncome,
+            incomeGroup,
             expenses: groupedExpenses,
             totalExpense,
             balance
@@ -261,13 +305,17 @@ exports.downloadIncomeExpenseReport = async (req, res) => {
 
         // Load logo images
         const templateDir = path.join(__dirname, "../templates");
-        const logoPath = path.join(templateDir, 'logo.png');
+        const logoPath = path.join(templateDir, 'logo1.png');
         const logoBuffer = fs.readFileSync(logoPath);
         const base64Image = `data:image/png;base64,${logoBuffer.toString('base64')}`;
 
+        const yuvakPath = path.join(templateDir, 'yuvak_logo.png');
+        const yuvaklogoBuffer = fs.readFileSync(yuvakPath);
+        const yuvakbase64Image = `data:image/png;base64,${yuvaklogoBuffer.toString('base64')}`;
+
         const html = await ejs.renderFile(
             path.join(templateDir, "income-expense-report.ejs"),
-            { reportData, imagePath: base64Image }
+            { reportData, imagePath: base64Image, yuvakbase64Image: yuvakbase64Image },
         );
 
         // Generate PDF
@@ -284,10 +332,11 @@ exports.downloadIncomeExpenseReport = async (req, res) => {
             headerTemplate: `
                 <div style="width:100%; text-align:center; font-size:10pt; padding:5px 0;">
                     <div style="display: flex; width:100%; align-items:center; justify-content: center; gap: 15px;">
-                        <img src="${base64Image}" alt="Logo" style="height:60px; vertical-align:middle; margin-right:5px;" />
-                        <span style="font-size: 30px; font-weight:bold; color:darkred;">Shivam Yuvak Mandal</span>
+                        <img src="${base64Image}" alt="Logo" style="height:80px; vertical-align:middle; margin-right:5px;" />
+<!--                        <span style="font-size: 30px; font-weight:bold; color:darkred;">Shivam Yuvak Mandal</span>-->
+                        <img src="${yuvakbase64Image}" alt="Logo" style="height:80px; vertical-align:middle; margin-right:5px;" />
                     </div>
-                    <div style="margin-top:10px; font-size:14pt; font-weight:bold;">
+                    <div style="margin-top:10px; font-size:12pt; font-weight:bold;">
                         Festival Income & Expense Report - ${reportData.year}
                     </div>
                 </div>

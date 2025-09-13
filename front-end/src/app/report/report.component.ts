@@ -10,7 +10,12 @@ import {triggerFileDownload} from "../utils";
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent implements OnInit {
-  reportData: any;
+  reportData: any = {
+    income: 0,
+    expenses: {},
+    totalExpense: 0,
+    balance: 0
+  };
   loading = true;
   selectedYear: number;
   years: number[] = [];
@@ -67,6 +72,16 @@ export class ReportComponent implements OnInit {
       (sum: number, cat: any) => sum + (cat.total || 0),
       0
     );
+  }
+
+  getIncomeGroupKeys(obj: any): string[] {
+    return obj ? Object.keys(obj) : [];
+  }
+
+  getIncomeTypeLabel(type: string): string {
+    if (type.toLowerCase() === 'aarti') return 'Dharmik Falo (Aarti)';
+    if (type.toLowerCase() === 'balance') return 'Previous Balance';
+    return type.charAt(0).toUpperCase() + type.slice(1);
   }
 
   downloadReceipt() {

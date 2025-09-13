@@ -38,6 +38,7 @@
         .category-row {
             background: #f1f1f1;
             font-style: italic;
+            font-weight: bold;
         }
         @media print {
             body { font-size: 10pt; }
@@ -63,10 +64,34 @@
     </thead>
     <tbody>
     <tr>
-        <td class="text-right"><strong>Total Income</strong></td>
+        <td><strong>Total Income</strong></td>
         <td class="text-right">₹<%= reportData.income.toLocaleString() %></td>
         <td></td>
     </tr>
+
+    <!-- Income Group -->
+    <%
+    function getIncomeTypeLabel(type) {
+        if (!type) return 'Unknown';
+        if (type.toLowerCase() === 'balance') return 'Previous Balance';
+        if (type.toLowerCase() === 'aarti') return 'Dharmik Falo (Aarti)';
+        return type.charAt(0).toUpperCase() + type.slice(1);
+    }
+
+    if (reportData.incomeGroup) {
+    Object.keys(reportData.incomeGroup).forEach(type => {
+        const incomeItem = reportData.incomeGroup[type];
+    %>
+    <tr>
+        <td class="text-right" style="padding-right: 5px;"><em><%= getIncomeTypeLabel(type) %></em></td>
+        <td class="text-right">₹<%= incomeItem.total.toLocaleString() %></td>
+        <td></td>
+    </tr>
+    <%  })
+    } %>
+
+    <!-- Spacer -->
+    <tr><td colspan="3"></td></tr>
 
     <% Object.keys(reportData.expenses).forEach(fest => { %>
         <!-- Festival Header -->
@@ -77,7 +102,7 @@
         <!-- Categories -->
         <% Object.keys(reportData.expenses[fest]).forEach(cat => { %>
             <tr class="category-row">
-                <td class="text-center"><%= cat %></td>
+                <td class="text-right" style="padding-right: 40px;"><%= cat %></td>
                 <td></td>
                 <td class="text-right"><strong>₹<%= reportData.expenses[fest][cat].total.toLocaleString() %></strong></td>
             </tr>

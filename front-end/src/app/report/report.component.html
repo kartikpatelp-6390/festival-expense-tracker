@@ -51,29 +51,42 @@
           <tbody>
           <!-- Income Row -->
           <tr>
-            <td></td>
-            <td class="text-right">{{ reportData.income | currency:'INR':'symbol' }}</td>
+            <td><strong>Total Income</strong></td>
+            <td class="text-right"><strong>{{ reportData?.income | currency:'INR':'symbol' }}</strong></td>
             <td></td>
           </tr>
 
+          <!-- Income Group Rows -->
+          <ng-container *ngIf="reportData?.incomeGroup">
+            <ng-container *ngFor="let type of getIncomeGroupKeys(reportData?.incomeGroup)">
+              <tr>
+                <td class="text-right"><em>{{ getIncomeTypeLabel(type) }}</em></td>
+                <td class="text-right">{{ reportData?.incomeGroup[type].total | currency:'INR':'symbol' }}</td>
+                <td></td>
+              </tr>
+            </ng-container>
+            <!-- Spacer Row -->
+            <tr><td colspan="3"></td></tr>
+          </ng-container>
+
           <!-- Expense by Festival -->
-          <ng-container *ngFor="let fest of getFestivalKeys(reportData.expenses)">
+          <ng-container *ngFor="let fest of getFestivalKeys(reportData?.expenses)">
             <!-- Festival Header -->
             <tr class="table-primary">
               <td colspan="3"><strong>{{ fest }}</strong></td>
             </tr>
 
             <!-- Categories under Festival -->
-            <ng-container *ngFor="let cat of getCategoryKeys(reportData.expenses[fest])">
+            <ng-container *ngFor="let cat of getCategoryKeys(reportData?.expenses[fest])">
               <!-- Category Header -->
               <tr class="table-secondary">
-                <td class="text-center"><em>{{ cat }}</em></td>
+                <td class="text-right" style="padding-right: 40px;"><em>{{ cat }}</em></td>
                 <td></td>
-                <td class="text-right"><strong>{{ reportData.expenses[fest][cat].total | currency:'INR':'symbol' }}</strong></td>
+                <td class="text-right"><strong>{{ reportData?.expenses[fest][cat].total | currency:'INR':'symbol' }}</strong></td>
               </tr>
 
               <!-- Items under Category -->
-              <ng-container *ngFor="let item of reportData.expenses[fest][cat].items">
+              <ng-container *ngFor="let item of reportData?.expenses[fest][cat].items">
                 <tr>
                   <td class="pl-4 text-right" style="white-space: pre-line;">{{ item.title }}</td>
                   <td></td>
@@ -86,7 +99,7 @@
             <tr class="font-weight-bold">
               <td class="text-right pr-2">Subtotal - {{ fest }}</td>
               <td></td>
-              <td class="text-right">{{ getFestivalTotal(reportData.expenses[fest]) | currency:'INR':'symbol' }}</td>
+              <td class="text-right">{{ getFestivalTotal(reportData?.expenses[fest]) | currency:'INR':'symbol' }}</td>
             </tr>
 
             <!-- Spacer Row -->
@@ -96,8 +109,8 @@
           <!-- Totals -->
           <tr>
             <td><strong>Total</strong></td>
-            <td class="text-right"><strong>{{ reportData.income | currency:'INR':'symbol' }}</strong></td>
-            <td class="text-right"><strong>{{ reportData.totalExpense | currency:'INR':'symbol' }}</strong></td>
+            <td class="text-right"><strong>{{ reportData?.income | currency:'INR':'symbol' }}</strong></td>
+            <td class="text-right"><strong>{{ reportData?.totalExpense | currency:'INR':'symbol' }}</strong></td>
           </tr>
 
           <!-- Balance -->
@@ -105,8 +118,8 @@
             <td><strong>Balance</strong></td>
             <td></td>
             <td class="text-right">
-              <strong [ngClass]="reportData.balance >= 0 ? 'text-success' : 'text-danger'" >
-                {{ reportData.balance | currency:'INR':'symbol' }}
+              <strong [ngClass]="reportData?.balance >= 0 ? 'text-success' : 'text-danger'" >
+                {{ reportData?.balance | currency:'INR':'symbol' }}
               </strong>
             </td>
           </tr>
