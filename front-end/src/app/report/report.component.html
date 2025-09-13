@@ -43,9 +43,9 @@
         <table class="table table-bordered table-sm w-100 w-md-75 mx-auto">
           <thead class="thead-dark">
           <tr>
-            <th class="w-50">Title</th>
-            <th class="text-right w-25">Income</th>
-            <th class="text-right w-25">Expense</th>
+            <th class="w-50 text-center">Title</th>
+            <th class="text-center w-25">Income</th>
+            <th class="text-center w-25">Expense</th>
           </tr>
           </thead>
           <tbody>
@@ -59,21 +59,38 @@
           <!-- Expense by Festival -->
           <ng-container *ngFor="let fest of getFestivalKeys(reportData.expenses)">
             <!-- Festival Header -->
-            <tr>
-              <td><strong>{{ fest }}</strong></td>
-              <td></td>
-              <td></td>
+            <tr class="table-primary">
+              <td colspan="3"><strong>{{ fest }}</strong></td>
             </tr>
 
-            <!-- Expense Rows -->
-            <ng-container *ngFor="let exp of reportData.expenses[fest]">
-              <tr>
-                <td class="text-right">{{ exp.title | titlecase }}</td>
+            <!-- Categories under Festival -->
+            <ng-container *ngFor="let cat of getCategoryKeys(reportData.expenses[fest])">
+              <!-- Category Header -->
+              <tr class="table-secondary">
+                <td class="text-center"><em>{{ cat }}</em></td>
                 <td></td>
-                <td class="text-right">{{ exp.amount | currency:'INR':'symbol' }}</td>
+                <td class="text-right"><strong>{{ reportData.expenses[fest][cat].total | currency:'INR':'symbol' }}</strong></td>
               </tr>
+
+              <!-- Items under Category -->
+              <ng-container *ngFor="let item of reportData.expenses[fest][cat].items">
+                <tr>
+                  <td class="pl-4 text-right" style="white-space: pre-line;">{{ item.title }}</td>
+                  <td></td>
+                  <td class="text-right">{{ item.amount | currency:'INR':'symbol' }}</td>
+                </tr>
+              </ng-container>
             </ng-container>
-            <tr><td colspan="3"></td></tr> <!-- Blank row between expenses -->
+
+            <!-- Festival Total Row -->
+            <tr class="font-weight-bold">
+              <td class="text-right pr-2">Subtotal - {{ fest }}</td>
+              <td></td>
+              <td class="text-right">{{ getFestivalTotal(reportData.expenses[fest]) | currency:'INR':'symbol' }}</td>
+            </tr>
+
+            <!-- Spacer Row -->
+            <tr><td colspan="3"></td></tr>
           </ng-container>
 
           <!-- Totals -->

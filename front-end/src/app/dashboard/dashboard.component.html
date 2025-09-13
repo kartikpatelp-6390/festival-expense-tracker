@@ -83,6 +83,12 @@
         <h3 *ngIf="(box.type === 'house' || box.type === 'volunteer')">{{ box.value }}</h3>
 
         <p>{{ box.label }}</p>
+        <ng-container *ngIf="box.type === 'balance'">
+          <span>
+            <strong>Cash:</strong> {{ cashBalance | currency: 'INR': 'symbol' }}  |
+            <strong>Gpay:</strong> {{ gpayBalance | currency: 'INR': 'symbol' }}
+          </span>
+        </ng-container>
         <ng-container *ngIf="box.type === 'fund'">
           <span *ngFor="let fundData of fundBifurcateData | keyvalue; let isLast = last">
             <strong>{{ fundData.key }}:</strong> {{ fundData.value | currency:'INR':'symbol' }}

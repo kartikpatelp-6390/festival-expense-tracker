@@ -43,6 +43,9 @@ export class DashboardComponent implements OnInit {
 
   toastShown = false;
 
+  gpayBalance: number = 0;
+  cashBalance: number = 0;
+
   constructor(
     private dashboardService: DashboardService,
     private authService: AuthService,
@@ -67,6 +70,11 @@ export class DashboardComponent implements OnInit {
     let totalBalances: any = 0;
     let totalEstimated: any = 0;
 
+    let gpayFunds = 0;
+    let cashFunds = 0;
+    let gpayExpenses = 0;
+    let cashExpenses = 0;
+
     this.customSearch = {'festivalYear': this.selectedYear};
 
     const funds$ = this.dashboardService.getFunds(this.customSearch);
@@ -83,6 +91,24 @@ export class DashboardComponent implements OnInit {
       totalFunds = fundsData.reduce((sum, item) => sum + item.amount, 0);
       totalExpenses = expensesData.reduce((sum, item) => sum + item.amount, 0);
 
+      // GPay / Cash split for funds
+      fundsData.forEach(item => {
+        if (item.paymentMethod?.toLowerCase() === 'gpay') {
+          gpayFunds += item.amount;
+        } else if (item.paymentMethod?.toLowerCase() === 'cash') {
+          cashFunds += item.amount;
+        }
+      });
+
+      // GPay / Cash split for expenses
+      expensesData.forEach(item => {
+        if (item.paymentMethod?.toLowerCase() === 'gpay') {
+          gpayExpenses += item.amount;
+        } else if (item.paymentMethod?.toLowerCase() === 'cash') {
+          cashExpenses += item.amount;
+        }
+      });
+
       this.totalEstimatedAmount = estimateData.reduce((sum, item) => sum + item.estimatedAmount, 0);
 
       // Total and bifurcated expenses
@@ -96,6 +122,10 @@ export class DashboardComponent implements OnInit {
 
       totalBalances = totalFunds - totalExpenses;
       this.totalBalance = totalBalances;
+
+      // GPay & Cash Balance
+      this.gpayBalance = gpayFunds - gpayExpenses;
+      this.cashBalance = cashFunds - cashExpenses;
 
       // get unit house number who funded
       const uniqueHouseIds = new Set<String>();

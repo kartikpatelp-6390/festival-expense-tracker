@@ -57,6 +57,18 @@ export class ReportComponent implements OnInit {
     return Object.keys(obj);
   }
 
+  getCategoryKeys(festivalExpenses: any): string[] {
+    return Object.keys(festivalExpenses || {});
+  }
+
+  getFestivalTotal(festivalExpenses: any): any {
+    if (!festivalExpenses) return 0;
+    return Object.values(festivalExpenses).reduce(
+      (sum: number, cat: any) => sum + (cat.total || 0),
+      0
+    );
+  }
+
   downloadReceipt() {
     this.downloading = true; // start loading state
     this.customSearch = {'year': this.year};

@@ -16,6 +16,7 @@ app.use(cors({
     origin: "*",
 }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/dashboard", protect, require("./routes/dashboardRoutes"));
 app.use("/api/house", protect, require("./routes/houseRoutes"));
